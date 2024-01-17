@@ -1,5 +1,5 @@
 "use strict";
-import { ethers } from "ethers";
+import { ethers } from "swisstronik-ethers";
 import { version } from "./_version";
 const logger = new ethers.utils.Logger(version);
 export class MetamaskProvider extends ethers.providers.Web3Provider {

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { ethers } from "ethers";
+import { ethers } from "swisstronik-ethers";
 function randomBytes(seed, lower, upper) {
     if (!upper) {
         upper = lower;

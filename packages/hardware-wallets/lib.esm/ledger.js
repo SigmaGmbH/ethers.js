@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { ethers } from "ethers";
+import { ethers } from "swisstronik-ethers";
 import { version } from "./_version";
 const logger = new ethers.utils.Logger(version);
 import Eth from "@ledgerhq/hw-app-eth";

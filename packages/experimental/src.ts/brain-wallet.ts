@@ -1,6 +1,6 @@
 "use strict";
 
-import { ethers } from "ethers";
+import { ethers } from "swisstronik-ethers";
 
 import scrypt from "scrypt-js";
 

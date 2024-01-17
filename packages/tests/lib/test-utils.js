@@ -59,7 +59,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var assert_1 = __importDefault(require("assert"));
-var ethers_1 = require("ethers");
+var swisstronik_ethers_1 = require("swisstronik-ethers");
 var testcases_1 = require("@ethersproject/testcases");
 var utils = __importStar(require("./utils"));
 function equals(a, b) {
@@ -78,7 +78,7 @@ function equals(a, b) {
 }
 describe('Test Contract Address Generation', function () {
     // @TODO: Mine a large collection of these from the blockchain
-    var getContractAddress = ethers_1.ethers.utils.getContractAddress;
+    var getContractAddress = swisstronik_ethers_1.ethers.utils.getContractAddress;
     var Tests = [
         // Transaction: 0x939aa17985bc2a52a0c1cba9497ef09e092355a805a8150e30e24b753bac6864
         {
@@ -169,30 +169,30 @@ describe('Test RLP Coder', function () {
     tests.forEach(function (test) {
         it(('RLP coder encoded - ' + test.name), function () {
             this.timeout(120000);
-            assert_1.default.equal(ethers_1.ethers.utils.RLP.encode(test.decoded), test.encoded, 'RLP encoded - ' + test.name);
+            assert_1.default.equal(swisstronik_ethers_1.ethers.utils.RLP.encode(test.decoded), test.encoded, 'RLP encoded - ' + test.name);
         });
     });
     tests.forEach(function (test) {
         it(('RLP coder decoded - ' + test.name), function () {
             this.timeout(120000);
-            assert_1.default.ok(equals(ethers_1.ethers.utils.RLP.decode(test.encoded), test.decoded), 'RLP decoded - ' + test.name);
+            assert_1.default.ok(equals(swisstronik_ethers_1.ethers.utils.RLP.decode(test.encoded), test.decoded), 'RLP decoded - ' + test.name);
         });
     });
 });
 describe('Test Unit Conversion', function () {
     var tests = (0, testcases_1.loadTests)('units');
     tests.forEach(function (test) {
-        var wei = ethers_1.ethers.BigNumber.from(test.wei);
+        var wei = swisstronik_ethers_1.ethers.BigNumber.from(test.wei);
         it(('parses ' + test.ether + ' ether'), function () {
-            assert_1.default.ok(ethers_1.ethers.utils.parseEther(test.ether.replace(/,/g, '')).eq(wei), 'parsing ether failed - ' + test.name);
+            assert_1.default.ok(swisstronik_ethers_1.ethers.utils.parseEther(test.ether.replace(/,/g, '')).eq(wei), 'parsing ether failed - ' + test.name);
         });
         it(('formats ' + wei.toString() + ' wei to ether'), function () {
-            var actual = ethers_1.ethers.utils.formatEther(wei);
+            var actual = swisstronik_ethers_1.ethers.utils.formatEther(wei);
             assert_1.default.equal(actual, test.ether_format, 'formatting wei failed - ' + test.name);
         });
     });
     tests.forEach(function (test) {
-        var wei = ethers_1.ethers.BigNumber.from(test.wei);
+        var wei = swisstronik_ethers_1.ethers.BigNumber.from(test.wei);
         ['kwei', 'mwei', 'gwei', 'szabo', 'finney', 'satoshi'].forEach(function (name) {
             var unitName = name;
             if (name === 'satoshi') {
@@ -201,13 +201,13 @@ describe('Test Unit Conversion', function () {
             if (test[name]) {
                 it(('parses ' + test[name] + ' ' + name), function () {
                     this.timeout(120000);
-                    assert_1.default.ok(ethers_1.ethers.utils.parseUnits(test[name].replace(/,/g, ''), unitName).eq(wei), ('parsing ' + name + ' failed - ' + test.name));
+                    assert_1.default.ok(swisstronik_ethers_1.ethers.utils.parseUnits(test[name].replace(/,/g, ''), unitName).eq(wei), ('parsing ' + name + ' failed - ' + test.name));
                 });
             }
             var expectedKey = (name + '_format');
             if (test[expectedKey]) {
                 it(('formats ' + wei.toString() + ' wei to ' + name + ')'), function () {
-                    var actual = ethers_1.ethers.utils.formatUnits(wei, unitName);
+                    var actual = swisstronik_ethers_1.ethers.utils.formatUnits(wei, unitName);
                     var expected = test[expectedKey];
                     assert_1.default.equal(actual, expected, ('formats ' + name + ' - ' + test.name));
                 });
@@ -231,22 +231,22 @@ describe('Test Unit Conversion', function () {
             "998998998998.123456789": "998,998,998,998.123456789",
         };
         Object.keys(tests).forEach(function (test) {
-            assert_1.default.equal(ethers_1.ethers.utils.commify(test), tests[test]);
+            assert_1.default.equal(swisstronik_ethers_1.ethers.utils.commify(test), tests[test]);
         });
     });
     // See #2016; @TODO: Add more tests along these lines
     it("checks extra tests", function () {
-        assert_1.default.ok(ethers_1.ethers.utils.parseUnits("2", 0).eq(2), "folds trailing zeros without decimal: 2");
-        assert_1.default.ok(ethers_1.ethers.utils.parseUnits("2.", 0).eq(2), "folds trailing zeros without decimal: 2.");
-        assert_1.default.ok(ethers_1.ethers.utils.parseUnits("2.0", 0).eq(2), "folds trailing zeros without decimal: 2.0");
-        assert_1.default.ok(ethers_1.ethers.utils.parseUnits("2.00", 0).eq(2), "folds trailing zeros without decimal: 2.00");
-        assert_1.default.ok(ethers_1.ethers.utils.parseUnits("2", 1).eq(20), "folds trailing zeros: 2");
-        assert_1.default.ok(ethers_1.ethers.utils.parseUnits("2.", 1).eq(20), "folds trailing zeros: 2.");
-        assert_1.default.ok(ethers_1.ethers.utils.parseUnits("2.0", 1).eq(20), "folds trailing zeros: 2.0");
-        assert_1.default.ok(ethers_1.ethers.utils.parseUnits("2.00", 1).eq(20), "folds trailing zeros: 2.00");
-        assert_1.default.ok(ethers_1.ethers.utils.parseUnits("2.5", 1).eq(25), "folds trailing zeros: 2.5");
-        assert_1.default.ok(ethers_1.ethers.utils.parseUnits("2.50", 1).eq(25), "folds trailing zeros: 2.50");
-        assert_1.default.ok(ethers_1.ethers.utils.parseUnits("2.500", 1).eq(25), "folds trailing zeros: 2.500");
+        assert_1.default.ok(swisstronik_ethers_1.ethers.utils.parseUnits("2", 0).eq(2), "folds trailing zeros without decimal: 2");
+        assert_1.default.ok(swisstronik_ethers_1.ethers.utils.parseUnits("2.", 0).eq(2), "folds trailing zeros without decimal: 2.");
+        assert_1.default.ok(swisstronik_ethers_1.ethers.utils.parseUnits("2.0", 0).eq(2), "folds trailing zeros without decimal: 2.0");
+        assert_1.default.ok(swisstronik_ethers_1.ethers.utils.parseUnits("2.00", 0).eq(2), "folds trailing zeros without decimal: 2.00");
+        assert_1.default.ok(swisstronik_ethers_1.ethers.utils.parseUnits("2", 1).eq(20), "folds trailing zeros: 2");
+        assert_1.default.ok(swisstronik_ethers_1.ethers.utils.parseUnits("2.", 1).eq(20), "folds trailing zeros: 2.");
+        assert_1.default.ok(swisstronik_ethers_1.ethers.utils.parseUnits("2.0", 1).eq(20), "folds trailing zeros: 2.0");
+        assert_1.default.ok(swisstronik_ethers_1.ethers.utils.parseUnits("2.00", 1).eq(20), "folds trailing zeros: 2.00");
+        assert_1.default.ok(swisstronik_ethers_1.ethers.utils.parseUnits("2.5", 1).eq(25), "folds trailing zeros: 2.5");
+        assert_1.default.ok(swisstronik_ethers_1.ethers.utils.parseUnits("2.50", 1).eq(25), "folds trailing zeros: 2.50");
+        assert_1.default.ok(swisstronik_ethers_1.ethers.utils.parseUnits("2.500", 1).eq(25), "folds trailing zeros: 2.500");
     });
 });
 describe('Test Namehash', function () {
@@ -254,7 +254,7 @@ describe('Test Namehash', function () {
     tests.forEach(function (test) {
         it(('computes namehash - "' + test.name + '"'), function () {
             this.timeout(120000);
-            assert_1.default.equal(ethers_1.ethers.utils.namehash(test.name), test.expected, 'computes namehash(' + test.name + ')');
+            assert_1.default.equal(swisstronik_ethers_1.ethers.utils.namehash(test.name), test.expected, 'computes namehash(' + test.name + ')');
         });
     });
     var goodNames = [
@@ -273,19 +273,19 @@ describe('Test Namehash', function () {
     // The empty string is not a valid name, but has the zero hash
     // as its namehash, which may be used for recursive purposes
     it("empty ENS name", function () {
-        assert_1.default.ok(!ethers_1.ethers.utils.isValidName(""));
+        assert_1.default.ok(!swisstronik_ethers_1.ethers.utils.isValidName(""));
     });
     goodNames.forEach(function (name) {
         it("ENS namehash ok - " + name, function () {
-            assert_1.default.ok(ethers_1.ethers.utils.isValidName(name));
-            ethers_1.ethers.utils.namehash(name);
+            assert_1.default.ok(swisstronik_ethers_1.ethers.utils.isValidName(name));
+            swisstronik_ethers_1.ethers.utils.namehash(name);
         });
     });
     badNames.forEach(function (name) {
         it("ENS namehash fails - " + name, function () {
-            assert_1.default.ok(!ethers_1.ethers.utils.isValidName(name));
+            assert_1.default.ok(!swisstronik_ethers_1.ethers.utils.isValidName(name));
             assert_1.default.throws(function () {
-                var namehash = ethers_1.ethers.utils.namehash(name);
+                var namehash = swisstronik_ethers_1.ethers.utils.namehash(name);
                 console.log(name, namehash);
             }, function (error) {
                 return !!error.message.match(/invalid ENS name; empty component/);
@@ -304,7 +304,7 @@ describe('Test ID Hash Functions', function () {
     tests.forEach(function (test) {
         it(('computes id - ' + test.name), function () {
             this.timeout(120000);
-            var actual = ethers_1.ethers.utils.id(test.text);
+            var actual = swisstronik_ethers_1.ethers.utils.id(test.text);
             assert_1.default.equal(actual, test.expected, 'computes id(' + test.text + ')');
         });
     });
@@ -315,7 +315,7 @@ describe('Test Solidity Hash Functions', function () {
         it("computes " + funcName + " correctly", function () {
             this.timeout(120000);
             tests.forEach(function (test, index) {
-                var actual = (ethers_1.ethers.utils)['solidity' + funcName](test.types, test.values);
+                var actual = (swisstronik_ethers_1.ethers.utils)['solidity' + funcName](test.types, test.values);
                 var expected = test[testKey];
                 assert_1.default.equal(actual, expected, ('computes solidity-' + funcName + '(' + JSON.stringify(test.values) + ') - ' + test.types));
             });
@@ -336,7 +336,7 @@ describe('Test Solidity Hash Functions', function () {
     testsInvalid.forEach(function (type) {
         it("disallows invalid type \"" + type + "\"", function () {
             assert_1.default.throws(function () {
-                ethers_1.ethers.utils.solidityPack([type], ["0x12"]);
+                swisstronik_ethers_1.ethers.utils.solidityPack([type], ["0x12"]);
             }, function (error) {
                 var message = error.message;
                 return (message.match(/invalid([a-z ]*) type/) && message.indexOf(type) >= 0);
@@ -349,19 +349,19 @@ describe('Test Hash Functions', function () {
     it('computes keccak256 correctly', function () {
         this.timeout(120000);
         tests.forEach(function (test) {
-            assert_1.default.equal(ethers_1.ethers.utils.keccak256(test.data), test.keccak256, ('Keccak256 - ' + test.data));
+            assert_1.default.equal(swisstronik_ethers_1.ethers.utils.keccak256(test.data), test.keccak256, ('Keccak256 - ' + test.data));
         });
     });
     it('computes sha2-256 correctly', function () {
         this.timeout(120000);
         tests.forEach(function (test) {
-            assert_1.default.equal(ethers_1.ethers.utils.sha256(test.data), test.sha256, ('SHA256 - ' + test.data));
+            assert_1.default.equal(swisstronik_ethers_1.ethers.utils.sha256(test.data), test.sha256, ('SHA256 - ' + test.data));
         });
     });
     it('computes sha2-512 correctly', function () {
         this.timeout(120000);
         tests.forEach(function (test) {
-            assert_1.default.equal(ethers_1.ethers.utils.sha512(test.data), test.sha512, ('SHA512 - ' + test.data));
+            assert_1.default.equal(swisstronik_ethers_1.ethers.utils.sha512(test.data), test.sha512, ('SHA512 - ' + test.data));
         });
     });
 });
@@ -371,8 +371,8 @@ describe('Test Solidity splitSignature', function () {
         var r = '0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef';
         var s = '0xcafe1a7ecafe1a7ecafe1a7ecafe1a7ecafe1a7ecafe1a7ecafe1a7ecafe1a7e';
         for (var v = 27; v <= 28; v++) {
-            var signature = ethers_1.ethers.utils.concat([r, s, [v]]);
-            var sig = ethers_1.ethers.utils.splitSignature(signature);
+            var signature = swisstronik_ethers_1.ethers.utils.concat([r, s, [v]]);
+            var sig = swisstronik_ethers_1.ethers.utils.splitSignature(signature);
             assert_1.default.equal(sig.r, r, 'split r correctly');
             assert_1.default.equal(sig.s, s, 'split s correctly');
             assert_1.default.equal(sig.v, v, 'split v correctly');
@@ -383,8 +383,8 @@ describe('Test Solidity splitSignature', function () {
         var r = '0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef';
         var s = '0xcafe1a7ecafe1a7ecafe1a7ecafe1a7ecafe1a7ecafe1a7ecafe1a7ecafe1a7e';
         for (var v = 27; v <= 28; v++) {
-            var signature = ethers_1.ethers.utils.concat([r, s, [v - 27]]);
-            var sig = ethers_1.ethers.utils.splitSignature(signature);
+            var signature = swisstronik_ethers_1.ethers.utils.concat([r, s, [v - 27]]);
+            var sig = swisstronik_ethers_1.ethers.utils.splitSignature(signature);
             assert_1.default.equal(sig.r, r, 'split r correctly');
             assert_1.default.equal(sig.s, s, 'split s correctly');
             assert_1.default.equal(sig.v, v, 'split v correctly');
@@ -396,19 +396,19 @@ describe('Test Base64 coder', function () {
     it('encodes and decodes the example from wikipedia', function () {
         this.timeout(120000);
         var decodedText = 'Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure.';
-        var decoded = ethers_1.ethers.utils.toUtf8Bytes(decodedText);
+        var decoded = swisstronik_ethers_1.ethers.utils.toUtf8Bytes(decodedText);
         var encoded = 'TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlzIHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2YgdGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGludWVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRoZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=';
-        assert_1.default.equal(ethers_1.ethers.utils.base64.encode(decoded), encoded, 'encodes to base64 string');
-        assert_1.default.equal(ethers_1.ethers.utils.toUtf8String(ethers_1.ethers.utils.base64.decode(encoded)), decodedText, 'decodes from base64 string');
+        assert_1.default.equal(swisstronik_ethers_1.ethers.utils.base64.encode(decoded), encoded, 'encodes to base64 string');
+        assert_1.default.equal(swisstronik_ethers_1.ethers.utils.toUtf8String(swisstronik_ethers_1.ethers.utils.base64.decode(encoded)), decodedText, 'decodes from base64 string');
     });
 });
 describe('Test UTF-8 coder', function () {
-    var overlong = ethers_1.ethers.utils.Utf8ErrorReason.OVERLONG;
-    var utf16Surrogate = ethers_1.ethers.utils.Utf8ErrorReason.UTF16_SURROGATE;
-    var overrun = ethers_1.ethers.utils.Utf8ErrorReason.OVERRUN;
-    var missingContinue = ethers_1.ethers.utils.Utf8ErrorReason.MISSING_CONTINUE;
-    var unexpectedContinue = ethers_1.ethers.utils.Utf8ErrorReason.UNEXPECTED_CONTINUE;
-    var outOfRange = ethers_1.ethers.utils.Utf8ErrorReason.OUT_OF_RANGE;
+    var overlong = swisstronik_ethers_1.ethers.utils.Utf8ErrorReason.OVERLONG;
+    var utf16Surrogate = swisstronik_ethers_1.ethers.utils.Utf8ErrorReason.UTF16_SURROGATE;
+    var overrun = swisstronik_ethers_1.ethers.utils.Utf8ErrorReason.OVERRUN;
+    var missingContinue = swisstronik_ethers_1.ethers.utils.Utf8ErrorReason.MISSING_CONTINUE;
+    var unexpectedContinue = swisstronik_ethers_1.ethers.utils.Utf8ErrorReason.UNEXPECTED_CONTINUE;
+    var outOfRange = swisstronik_ethers_1.ethers.utils.Utf8ErrorReason.OUT_OF_RANGE;
     var BadUTF = [
         // See: https://en.wikipedia.org/wiki/UTF-8#Overlong_encodings
         { bytes: [0xF0, 0x82, 0x82, 0xAC], reason: overlong, ignored: "", replaced: "\u20ac", name: 'wikipedia overlong encoded Euro sign' },
@@ -433,14 +433,14 @@ describe('Test UTF-8 coder', function () {
     BadUTF.forEach(function (test) {
         it('toUtf8String - ' + test.name, function () {
             // Check the string using the ignoreErrors conversion
-            var ignored = ethers_1.ethers.utils.toUtf8String(test.bytes, ethers_1.ethers.utils.Utf8ErrorFuncs.ignore);
+            var ignored = swisstronik_ethers_1.ethers.utils.toUtf8String(test.bytes, swisstronik_ethers_1.ethers.utils.Utf8ErrorFuncs.ignore);
             assert_1.default.equal(ignored, test.ignored, "ignoring errors matches");
             // Check the string using the replaceErrors conversion
-            var replaced = ethers_1.ethers.utils.toUtf8String(test.bytes, ethers_1.ethers.utils.Utf8ErrorFuncs.replace);
+            var replaced = swisstronik_ethers_1.ethers.utils.toUtf8String(test.bytes, swisstronik_ethers_1.ethers.utils.Utf8ErrorFuncs.replace);
             assert_1.default.equal(replaced, test.replaced, "replaced errors matches");
             // Check the string throws the correct error during conversion
             assert_1.default.throws(function () {
-                var result = ethers_1.ethers.utils.toUtf8String(test.bytes);
+                var result = swisstronik_ethers_1.ethers.utils.toUtf8String(test.bytes);
                 console.log('Result', result);
             }, function (error) {
                 return (error.message.split(";").pop().split("(")[0].trim() === test.reason);
@@ -475,9 +475,9 @@ describe('Test UTF-8 coder', function () {
         for (var i = 0; i < 100000; i++) {
             var seed = 'test-' + String(i);
             var str = randomString(seed);
-            var bytes = ethers_1.ethers.utils.toUtf8Bytes(str);
-            var str2 = ethers_1.ethers.utils.toUtf8String(bytes);
-            var escaped = JSON.parse(ethers_1.ethers.utils._toEscapedUtf8String(bytes));
+            var bytes = swisstronik_ethers_1.ethers.utils.toUtf8Bytes(str);
+            var str2 = swisstronik_ethers_1.ethers.utils.toUtf8String(bytes);
+            var escaped = JSON.parse(swisstronik_ethers_1.ethers.utils._toEscapedUtf8String(bytes));
             //            assert.ok(Buffer.from(str).equals(Buffer.from(bytes)), 'bytes not generated correctly - ' + bytes)
             assert_1.default.equal(str2, str, 'conversion not reflexive - ' + bytes);
             assert_1.default.equal(escaped, str, 'conversion not reflexive - ' + bytes);
@@ -488,14 +488,14 @@ describe('Test Bytes32String coder', function () {
     // @TODO: a LOT more test cases; generated from Solidity
     it("encodes an ens name", function () {
         var str = "ricmoo.firefly.eth";
-        var bytes32 = ethers_1.ethers.utils.formatBytes32String(str);
-        var str2 = ethers_1.ethers.utils.parseBytes32String(bytes32);
+        var bytes32 = swisstronik_ethers_1.ethers.utils.formatBytes32String(str);
+        var str2 = swisstronik_ethers_1.ethers.utils.parseBytes32String(bytes32);
         assert_1.default.equal(bytes32, '0x7269636d6f6f2e66697265666c792e6574680000000000000000000000000000', 'formatted correctly');
         assert_1.default.equal(str2, str, "parsed correctly");
     });
 });
 function getHex(value) {
-    return ethers_1.ethers.utils.hexlify(ethers_1.ethers.utils.toUtf8Bytes(value));
+    return swisstronik_ethers_1.ethers.utils.hexlify(swisstronik_ethers_1.ethers.utils.toUtf8Bytes(value));
 }
 describe("Test nameprep", function () {
     var Tests = (0, testcases_1.loadTests)("nameprep");
@@ -513,17 +513,17 @@ describe("Test nameprep", function () {
             return;
         }
         it(test.comment, function () {
-            var input = ethers_1.ethers.utils.toUtf8String(test.input);
+            var input = swisstronik_ethers_1.ethers.utils.toUtf8String(test.input);
             if (test.output) {
-                var expected = ethers_1.ethers.utils.toUtf8String(test.output);
-                var actual = ethers_1.ethers.utils.nameprep(input);
+                var expected = swisstronik_ethers_1.ethers.utils.toUtf8String(test.output);
+                var actual = swisstronik_ethers_1.ethers.utils.nameprep(input);
                 assert_1.default.equal(actual, expected, "actual(\"" + getHex(actual) + "\") !== expected(\"" + getHex(expected) + "\")");
             }
             else {
                 var ok = true;
                 var reason = "";
                 try {
-                    var actual = ethers_1.ethers.utils.nameprep(input);
+                    var actual = swisstronik_ethers_1.ethers.utils.nameprep(input);
                     console.log(actual);
                     reason = "should has thrown " + test.rc + " - actual(\"" + getHex(actual) + "\")";
                     ok = false;
@@ -539,25 +539,25 @@ describe("Test Signature Manipulation", function () {
     var tests = (0, testcases_1.loadTests)("transactions");
     tests.forEach(function (test) {
         it("autofills partial signatures - " + test.name, function () {
-            var address = ethers_1.ethers.utils.getAddress(test.accountAddress);
-            var hash = ethers_1.ethers.utils.keccak256(test.unsignedTransaction);
-            var data = ethers_1.ethers.utils.RLP.decode(test.signedTransaction);
+            var address = swisstronik_ethers_1.ethers.utils.getAddress(test.accountAddress);
+            var hash = swisstronik_ethers_1.ethers.utils.keccak256(test.unsignedTransaction);
+            var data = swisstronik_ethers_1.ethers.utils.RLP.decode(test.signedTransaction);
             var s = data.pop(), r = data.pop(), v = parseInt(data.pop().substring(2), 16);
-            var sig = ethers_1.ethers.utils.splitSignature({ r: r, s: s, v: v });
+            var sig = swisstronik_ethers_1.ethers.utils.splitSignature({ r: r, s: s, v: v });
             {
-                var addr = ethers_1.ethers.utils.recoverAddress(hash, {
+                var addr = swisstronik_ethers_1.ethers.utils.recoverAddress(hash, {
                     r: r, s: s, v: v
                 });
                 assert_1.default.equal(addr, address, "Using r, s and v");
             }
             {
-                var addr = ethers_1.ethers.utils.recoverAddress(hash, {
+                var addr = swisstronik_ethers_1.ethers.utils.recoverAddress(hash, {
                     r: sig.r, _vs: sig._vs
                 });
                 assert_1.default.equal(addr, address, "Using r, _vs");
             }
             {
-                var addr = ethers_1.ethers.utils.recoverAddress(hash, {
+                var addr = swisstronik_ethers_1.ethers.utils.recoverAddress(hash, {
                     r: sig.r, s: sig.s, recoveryParam: sig.recoveryParam
                 });
                 assert_1.default.equal(addr, address, "Using r, s and recoveryParam");
@@ -568,11 +568,11 @@ describe("Test Signature Manipulation", function () {
 describe("Test Typed Transactions", function () {
     var tests = (0, testcases_1.loadTests)("typed-transactions");
     function equalsData(name, a, b, ifNull) {
-        assert_1.default.equal(ethers_1.ethers.utils.hexlify(a), ethers_1.ethers.utils.hexlify((b == null) ? ifNull : b), name);
+        assert_1.default.equal(swisstronik_ethers_1.ethers.utils.hexlify(a), swisstronik_ethers_1.ethers.utils.hexlify((b == null) ? ifNull : b), name);
         return true;
     }
     function equalsNumber(name, a, b, ifNull) {
-        assert_1.default.ok(ethers_1.ethers.BigNumber.from(a).eq((b == null) ? ifNull : b), name);
+        assert_1.default.ok(swisstronik_ethers_1.ethers.BigNumber.from(a).eq((b == null) ? ifNull : b), name);
         return true;
     }
     function equalsArray(name, a, b, equals) {
@@ -638,18 +638,18 @@ describe("Test Typed Transactions", function () {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            wallet = new ethers_1.ethers.Wallet(test.key);
+                            wallet = new swisstronik_ethers_1.ethers.Wallet(test.key);
                             return [4 /*yield*/, wallet.signTransaction(test.tx)];
                         case 1:
                             signed = _a.sent();
                             assert_1.default.equal(signed, test.signed, "signed transactions match");
-                            assert_1.default.equal(ethers_1.ethers.utils.serializeTransaction(test.tx), test.unsigned, "unsigned transactions match");
+                            assert_1.default.equal(swisstronik_ethers_1.ethers.utils.serializeTransaction(test.tx), test.unsigned, "unsigned transactions match");
                             {
-                                tx = ethers_1.ethers.utils.parseTransaction(test.unsigned);
+                                tx = swisstronik_ethers_1.ethers.utils.parseTransaction(test.unsigned);
                                 assert_1.default.ok(equalsTransaction("transaction", tx, test.tx), "all unsigned keys match");
                             }
                             {
-                                tx = ethers_1.ethers.utils.parseTransaction(test.signed);
+                                tx = swisstronik_ethers_1.ethers.utils.parseTransaction(test.signed);
                                 assert_1.default.ok(equalsTransaction("transaction", tx, test.tx), "all signed keys match");
                                 assert_1.default.equal(tx.from.toLowerCase(), test.address, "sender matches");
                             }
@@ -666,7 +666,7 @@ describe("BigNumber", function () {
         if (test.expectedValue == null) {
             it(test.testcase, function () {
                 assert_1.default.throws(function () {
-                    var value = ethers_1.ethers.BigNumber.from(test.value);
+                    var value = swisstronik_ethers_1.ethers.BigNumber.from(test.value);
                     console.log("ERROR", value);
                 }, function (error) {
                     return true;
@@ -675,9 +675,9 @@ describe("BigNumber", function () {
         }
         else {
             it(test.testcase, function () {
-                var value = ethers_1.ethers.BigNumber.from(test.value);
+                var value = swisstronik_ethers_1.ethers.BigNumber.from(test.value);
                 assert_1.default.equal(value.toHexString(), test.expectedValue);
-                var value2 = ethers_1.ethers.BigNumber.from(value);
+                var value2 = swisstronik_ethers_1.ethers.BigNumber.from(value);
                 assert_1.default.equal(value2.toHexString(), test.expectedValue);
             });
         }
@@ -693,8 +693,8 @@ describe("BigNumber", function () {
         { value: "-0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", expected: "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" },
     ].forEach(function (test) {
         it("absolute value (" + test.value + ")", function () {
-            var value = ethers_1.ethers.BigNumber.from(test.value);
-            var expected = ethers_1.ethers.BigNumber.from(test.expected);
+            var value = swisstronik_ethers_1.ethers.BigNumber.from(test.value);
+            var expected = swisstronik_ethers_1.ethers.BigNumber.from(test.expected);
             assert_1.default.ok(value.abs().eq(expected));
         });
     });
@@ -702,7 +702,7 @@ describe("BigNumber", function () {
     it("Fails on junk with a length property", function () {
         var junk = { negative: 0, words: [1000], length: 1, red: null };
         assert_1.default.throws(function () {
-            var value = ethers_1.ethers.BigNumber.from("100").add(junk);
+            var value = swisstronik_ethers_1.ethers.BigNumber.from("100").add(junk);
             console.log("ERROR", value);
         }, function (error) {
             return true;
@@ -726,7 +726,7 @@ describe("FixedNumber", function () {
         ];
         Tests.forEach(function (test) {
             it("Create from=" + test.value, function () {
-                var value = ethers_1.ethers.FixedNumber.from(test.value);
+                var value = swisstronik_ethers_1.ethers.FixedNumber.from(test.value);
                 assert_1.default.equal(value.toString(), test.expected);
             });
         });
@@ -750,7 +750,7 @@ describe("FixedNumber", function () {
         ];
         Tests.forEach(function (test) {
             it("Rounding value=" + test.value + ", decimals=" + test.round, function () {
-                var value = ethers_1.ethers.FixedNumber.from(test.value).round(test.round);
+                var value = swisstronik_ethers_1.ethers.FixedNumber.from(test.value).round(test.round);
                 assert_1.default.equal(value.toString(), test.expected);
             });
         });
@@ -766,7 +766,7 @@ describe("FixedNumber", function () {
         ];
         Tests.forEach(function (test) {
             it("Clamping value=" + test.value, function () {
-                var value = ethers_1.ethers.FixedNumber.from(test.value);
+                var value = swisstronik_ethers_1.ethers.FixedNumber.from(test.value);
                 assert_1.default.equal(value.floor().toString(), test.floor);
                 assert_1.default.equal(value.ceiling().toString(), test.ceiling);
             });
@@ -774,15 +774,15 @@ describe("FixedNumber", function () {
     }
 });
 describe("Logger", function () {
-    var logger = new ethers_1.ethers.utils.Logger("testing/0.0");
+    var logger = new swisstronik_ethers_1.ethers.utils.Logger("testing/0.0");
     it("setLogLevel", function () {
-        ethers_1.ethers.utils.Logger.setLogLevel(ethers_1.ethers.utils.Logger.levels.DEBUG);
-        ethers_1.ethers.utils.Logger.setLogLevel(ethers_1.ethers.utils.Logger.levels.INFO);
-        ethers_1.ethers.utils.Logger.setLogLevel(ethers_1.ethers.utils.Logger.levels.WARNING);
-        ethers_1.ethers.utils.Logger.setLogLevel(ethers_1.ethers.utils.Logger.levels.ERROR);
-        ethers_1.ethers.utils.Logger.setLogLevel(ethers_1.ethers.utils.Logger.levels.OFF);
+        swisstronik_ethers_1.ethers.utils.Logger.setLogLevel(swisstronik_ethers_1.ethers.utils.Logger.levels.DEBUG);
+        swisstronik_ethers_1.ethers.utils.Logger.setLogLevel(swisstronik_ethers_1.ethers.utils.Logger.levels.INFO);
+        swisstronik_ethers_1.ethers.utils.Logger.setLogLevel(swisstronik_ethers_1.ethers.utils.Logger.levels.WARNING);
+        swisstronik_ethers_1.ethers.utils.Logger.setLogLevel(swisstronik_ethers_1.ethers.utils.Logger.levels.ERROR);
+        swisstronik_ethers_1.ethers.utils.Logger.setLogLevel(swisstronik_ethers_1.ethers.utils.Logger.levels.OFF);
         // Reset back to INFO when done tests
-        ethers_1.ethers.utils.Logger.setLogLevel(ethers_1.ethers.utils.Logger.levels.INFO);
+        swisstronik_ethers_1.ethers.utils.Logger.setLogLevel(swisstronik_ethers_1.ethers.utils.Logger.levels.INFO);
     });
     it("checkArgumentCount", function () {
         logger.checkArgumentCount(3, 3);
@@ -791,23 +791,23 @@ describe("Logger", function () {
         assert_1.default.throws(function () {
             logger.checkArgumentCount(1, 3);
         }, function (error) {
-            return error.code === ethers_1.ethers.utils.Logger.errors.MISSING_ARGUMENT;
+            return error.code === swisstronik_ethers_1.ethers.utils.Logger.errors.MISSING_ARGUMENT;
         });
     });
     it("checkArgumentCount - too many", function () {
         assert_1.default.throws(function () {
             logger.checkArgumentCount(3, 1);
         }, function (error) {
-            return error.code === ethers_1.ethers.utils.Logger.errors.UNEXPECTED_ARGUMENT;
+            return error.code === swisstronik_ethers_1.ethers.utils.Logger.errors.UNEXPECTED_ARGUMENT;
         });
     });
 });
 describe("Base58 Coder", function () {
     it("decodes", function () {
-        assert_1.default.equal(ethers_1.ethers.utils.toUtf8String(ethers_1.ethers.utils.base58.decode("JxF12TrwUP45BMd")), "Hello World");
+        assert_1.default.equal(swisstronik_ethers_1.ethers.utils.toUtf8String(swisstronik_ethers_1.ethers.utils.base58.decode("JxF12TrwUP45BMd")), "Hello World");
     });
     it("encodes", function () {
-        assert_1.default.equal(ethers_1.ethers.utils.base58.encode(ethers_1.ethers.utils.toUtf8Bytes("Hello World")), "JxF12TrwUP45BMd");
+        assert_1.default.equal(swisstronik_ethers_1.ethers.utils.base58.encode(swisstronik_ethers_1.ethers.utils.toUtf8Bytes("Hello World")), "JxF12TrwUP45BMd");
     });
 });
 /*
@@ -822,12 +822,12 @@ describe("EIP-712", function () {
     var tests = (0, testcases_1.loadTests)("eip712");
     tests.forEach(function (test) {
         it("encoding " + test.name, function () {
-            var encoder = ethers_1.ethers.utils._TypedDataEncoder.from(test.types);
+            var encoder = swisstronik_ethers_1.ethers.utils._TypedDataEncoder.from(test.types);
             assert_1.default.equal(encoder.primaryType, test.primaryType, "instance.primaryType");
             assert_1.default.equal(encoder.encode(test.data), test.encoded, "instance.encode()");
             //console.log(test);
-            assert_1.default.equal(ethers_1.ethers.utils._TypedDataEncoder.getPrimaryType(test.types), test.primaryType, "getPrimaryType");
-            assert_1.default.equal(ethers_1.ethers.utils._TypedDataEncoder.hash(test.domain, test.types, test.data), test.digest, "digest");
+            assert_1.default.equal(swisstronik_ethers_1.ethers.utils._TypedDataEncoder.getPrimaryType(test.types), test.primaryType, "getPrimaryType");
+            assert_1.default.equal(swisstronik_ethers_1.ethers.utils._TypedDataEncoder.hash(test.domain, test.types, test.data), test.digest, "digest");
         });
     });
     tests.forEach(function (test) {
@@ -840,7 +840,7 @@ describe("EIP-712", function () {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            wallet = new ethers_1.ethers.Wallet(test.privateKey);
+                            wallet = new swisstronik_ethers_1.ethers.Wallet(test.privateKey);
                             return [4 /*yield*/, wallet._signTypedData(test.domain, test.types, test.data)];
                         case 1:
                             signature = _a.sent();
@@ -917,10 +917,10 @@ describe("EIP-2930", function () {
                 type: 1,
                 chainId: 3,
                 nonce: 13,
-                gasPrice: ethers_1.ethers.BigNumber.from("0x65cf89a0"),
-                gasLimit: ethers_1.ethers.BigNumber.from("0x5b68"),
+                gasPrice: swisstronik_ethers_1.ethers.BigNumber.from("0x65cf89a0"),
+                gasLimit: swisstronik_ethers_1.ethers.BigNumber.from("0x5b68"),
                 to: "0x32162F3581E88a5f62e8A61892B42C46E2c18f7b",
-                value: ethers_1.ethers.BigNumber.from("0"),
+                value: swisstronik_ethers_1.ethers.BigNumber.from("0"),
                 data: "0x",
                 accessList: [
                     {
@@ -943,10 +943,10 @@ describe("EIP-2930", function () {
                 type: 1,
                 chainId: 3,
                 nonce: 14,
-                gasPrice: ethers_1.ethers.BigNumber.from("0x65cf89a0"),
-                gasLimit: ethers_1.ethers.BigNumber.from("0x71ac"),
+                gasPrice: swisstronik_ethers_1.ethers.BigNumber.from("0x65cf89a0"),
+                gasLimit: swisstronik_ethers_1.ethers.BigNumber.from("0x71ac"),
                 to: "0x32162F3581E88a5f62e8A61892B42C46E2c18f7b",
-                value: ethers_1.ethers.BigNumber.from("0"),
+                value: swisstronik_ethers_1.ethers.BigNumber.from("0"),
                 data: "0x",
                 accessList: [
                     {
@@ -967,13 +967,13 @@ describe("EIP-2930", function () {
     ];
     Tests.forEach(function (test) {
         it("tx:" + test.hash, function () {
-            var tx = ethers_1.ethers.utils.parseTransaction(test.data);
+            var tx = swisstronik_ethers_1.ethers.utils.parseTransaction(test.data);
             assert_1.default.equal(tx.hash, test.hash);
             var reason = deepEquals(tx, test.tx);
             assert_1.default.ok(reason == null, reason);
-            var preimageData = ethers_1.ethers.utils.serializeTransaction((test.tx));
+            var preimageData = swisstronik_ethers_1.ethers.utils.serializeTransaction((test.tx));
             assert_1.default.equal(preimageData, test.preimage);
-            var data = ethers_1.ethers.utils.serializeTransaction((test.tx), test.tx);
+            var data = swisstronik_ethers_1.ethers.utils.serializeTransaction((test.tx), test.tx);
             assert_1.default.equal(data, test.data);
         });
     });

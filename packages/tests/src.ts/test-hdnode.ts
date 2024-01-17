@@ -2,7 +2,7 @@
 
 import assert from "assert";
 
-import { ethers } from "ethers";
+import { ethers } from "swisstronik-ethers";
 import { loadTests, randomNumber, TestCase } from "@ethersproject/testcases";
 
 function randomCase(seed: string, text: string): string {

@@ -9,7 +9,7 @@ import { dirname, resolve } from "path";
 import _module from "module";
 import vm from "vm";
 
-import { ethers } from "ethers";
+import { ethers } from "swisstronik-ethers";
 
 import { Opcode } from "./opcodes";
 

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { ethers } from "ethers";
+import { ethers } from "swisstronik-ethers";
 import { Base58 } from "@ethersproject/basex";
 import { CLI, Plugin } from '../cli';
 import { version } from "../_version";

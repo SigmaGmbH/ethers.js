@@ -52,11 +52,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var ethers_1 = require("ethers");
+var swisstronik_ethers_1 = require("swisstronik-ethers");
 var basex_1 = require("@ethersproject/basex");
 var cli_1 = require("../cli");
 var _version_1 = require("../_version");
-var logger = new ethers_1.ethers.utils.Logger(_version_1.version);
+var logger = new swisstronik_ethers_1.ethers.utils.Logger(_version_1.version);
 var ensAbi = [
     "function setOwner(bytes32 node, address owner) external @500000",
     "function setSubnodeOwner(bytes32 node, bytes32 label, address owner) external @500000",
@@ -116,11 +116,11 @@ var EnsPlugin = /** @class */ (function (_super) {
     __extends(EnsPlugin, _super);
     function EnsPlugin() {
         var _this = _super.call(this) || this;
-        ethers_1.ethers.utils.defineReadOnly(_this, "_ethAddressCache", {});
+        swisstronik_ethers_1.ethers.utils.defineReadOnly(_this, "_ethAddressCache", {});
         return _this;
     }
     EnsPlugin.prototype.getEns = function () {
-        return new ethers_1.ethers.Contract(this.network.ensAddress, ensAbi, this.accounts[0] || this.provider);
+        return new swisstronik_ethers_1.ethers.Contract(this.network.ensAddress, ensAbi, this.accounts[0] || this.provider);
     };
     EnsPlugin.prototype.getResolver = function (nodehash) {
         return __awaiter(this, void 0, void 0, function () {
@@ -135,7 +135,7 @@ var EnsPlugin = /** @class */ (function (_super) {
                     case 1:
                         _a[_b] = _c.sent();
                         _c.label = 2;
-                    case 2: return [2 /*return*/, new ethers_1.ethers.Contract(this._ethAddressCache[nodehash], resolverAbi, this.accounts[0] || this.provider)];
+                    case 2: return [2 /*return*/, new swisstronik_ethers_1.ethers.Contract(this._ethAddressCache[nodehash], resolverAbi, this.accounts[0] || this.provider)];
                 }
             });
         });
@@ -146,7 +146,7 @@ var EnsPlugin = /** @class */ (function (_super) {
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        ethNodehash = ethers_1.ethers.utils.namehash("eth");
+                        ethNodehash = swisstronik_ethers_1.ethers.utils.namehash("eth");
                         if (!!this._ethAddressCache[interfaceId]) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.getResolver(ethNodehash)];
                     case 1:
@@ -170,7 +170,7 @@ var EnsPlugin = /** @class */ (function (_super) {
                     case 0: return [4 /*yield*/, this.getEthInterfaceAddress(InterfaceID_Controller)];
                     case 1:
                         address = _a.sent();
-                        return [2 /*return*/, new ethers_1.ethers.Contract(address, ethControllerAbi, this.accounts[0] || this.provider)];
+                        return [2 /*return*/, new swisstronik_ethers_1.ethers.Contract(address, ethControllerAbi, this.accounts[0] || this.provider)];
                 }
             });
         });
@@ -183,7 +183,7 @@ var EnsPlugin = /** @class */ (function (_super) {
                     case 0: return [4 /*yield*/, this.getEthInterfaceAddress(InterfaceID_Legacy)];
                     case 1:
                         address = _a.sent();
-                        return [2 /*return*/, new ethers_1.ethers.Contract(address, ethLegacyRegistrarAbi, this.accounts[0] || this.provider)];
+                        return [2 /*return*/, new swisstronik_ethers_1.ethers.Contract(address, ethLegacyRegistrarAbi, this.accounts[0] || this.provider)];
                 }
             });
         });
@@ -193,10 +193,10 @@ var EnsPlugin = /** @class */ (function (_super) {
             var address;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.getEns().owner(ethers_1.ethers.utils.namehash("eth"))];
+                    case 0: return [4 /*yield*/, this.getEns().owner(swisstronik_ethers_1.ethers.utils.namehash("eth"))];
                     case 1:
                         address = _a.sent();
-                        return [2 /*return*/, new ethers_1.ethers.Contract(address, ethRegistrarAbi, this.accounts[0] || this.provider)];
+                        return [2 /*return*/, new swisstronik_ethers_1.ethers.Contract(address, ethRegistrarAbi, this.accounts[0] || this.provider)];
                 }
             });
         });
@@ -251,7 +251,7 @@ var LookupPlugin = /** @class */ (function (_super) {
                                 switch (_g.label) {
                                     case 0:
                                         name_1 = this_1.names[i];
-                                        nodehash = ethers_1.ethers.utils.namehash(name_1);
+                                        nodehash = swisstronik_ethers_1.ethers.utils.namehash(name_1);
                                         details = {
                                             Nodehash: nodehash
                                         };
@@ -259,14 +259,14 @@ var LookupPlugin = /** @class */ (function (_super) {
                                     case 1:
                                         owner = _g.sent();
                                         resolverAddress = null;
-                                        if (!(owner === ethers_1.ethers.constants.AddressZero)) return [3 /*break*/, 2];
+                                        if (!(owner === swisstronik_ethers_1.ethers.constants.AddressZero)) return [3 /*break*/, 2];
                                         owner = null;
                                         return [3 /*break*/, 4];
                                     case 2:
                                         details.Controller = owner;
                                         _b = details;
                                         return [4 /*yield*/, ens.resolver(nodehash).then(function (address) {
-                                                if (address === ethers_1.ethers.constants.AddressZero) {
+                                                if (address === swisstronik_ethers_1.ethers.constants.AddressZero) {
                                                     return "(not configured)";
                                                 }
                                                 resolverAddress = address;
@@ -278,7 +278,7 @@ var LookupPlugin = /** @class */ (function (_super) {
                                     case 4:
                                         comps = name_1.split(".");
                                         if (!(comps.length === 2 && comps[1] === "eth")) return [3 /*break*/, 11];
-                                        details.Labelhash = ethers_1.ethers.utils.id(comps[0].toLowerCase()); // @TODO: nameprep
+                                        details.Labelhash = swisstronik_ethers_1.ethers.utils.id(comps[0].toLowerCase()); // @TODO: nameprep
                                         _c = details;
                                         return [4 /*yield*/, controller.available(comps[0])];
                                     case 5:
@@ -290,7 +290,7 @@ var LookupPlugin = /** @class */ (function (_super) {
                                         return [4 /*yield*/, registrar.ownerOf(details.Labelhash)];
                                     case 7:
                                         ownerOf = _g.sent();
-                                        if (ownerOf !== ethers_1.ethers.constants.AddressZero) {
+                                        if (ownerOf !== swisstronik_ethers_1.ethers.constants.AddressZero) {
                                             details.Registrant = ownerOf;
                                             details.Registrar = "Permanent";
                                         }
@@ -300,18 +300,18 @@ var LookupPlugin = /** @class */ (function (_super) {
                                         return [4 /*yield*/, legacyRegistrar.entries(details.Labelhash)];
                                     case 9:
                                         entry = _g.sent();
-                                        deed = new ethers_1.ethers.Contract(entry.owner, deedAbi, this_1.provider);
+                                        deed = new swisstronik_ethers_1.ethers.Contract(entry.owner, deedAbi, this_1.provider);
                                         _d = details;
                                         return [4 /*yield*/, deed.owner()];
                                     case 10:
                                         _d.Registrant = _g.sent();
                                         details.Registrar = "Legacy";
-                                        details["Deed Value"] = (ethers_1.ethers.utils.formatEther(entry.value) + " ether");
-                                        details["Highest Bid"] = (ethers_1.ethers.utils.formatEther(entry.highestBid) + " ether");
+                                        details["Deed Value"] = (swisstronik_ethers_1.ethers.utils.formatEther(entry.value) + " ether");
+                                        details["Highest Bid"] = (swisstronik_ethers_1.ethers.utils.formatEther(entry.highestBid) + " ether");
                                         return [3 /*break*/, 11];
                                     case 11:
                                         if (!resolverAddress) return [3 /*break*/, 16];
-                                        resolver = new ethers_1.ethers.Contract(resolverAddress, resolverAbi, this_1.provider);
+                                        resolver = new swisstronik_ethers_1.ethers.Contract(resolverAddress, resolverAbi, this_1.provider);
                                         _e = details;
                                         _f = "Address";
                                         return [4 /*yield*/, resolver.addr(nodehash)];
@@ -333,8 +333,8 @@ var LookupPlugin = /** @class */ (function (_super) {
                                                 if (hash === "0x") {
                                                     return "";
                                                 }
-                                                if (hash.substring(0, 10) === "0xe3010170" && ethers_1.ethers.utils.isHexString(hash, 38)) {
-                                                    return basex_1.Base58.encode(ethers_1.ethers.utils.hexDataSlice(hash, 4)) + " (IPFS)";
+                                                if (hash.substring(0, 10) === "0xe3010170" && swisstronik_ethers_1.ethers.utils.isHexString(hash, 38)) {
+                                                    return basex_1.Base58.encode(swisstronik_ethers_1.ethers.utils.hexDataSlice(hash, 4)) + " (IPFS)";
                                                 }
                                                 return hash + " (unknown format)";
                                             }, function (error) { return (""); })];
@@ -389,7 +389,7 @@ var AccountPlugin = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     AccountPlugin.getHelp = function () {
-        return logger.throwError("subclasses must implement this", ethers_1.ethers.errors.UNSUPPORTED_OPERATION, {
+        return logger.throwError("subclasses must implement this", swisstronik_ethers_1.ethers.errors.UNSUPPORTED_OPERATION, {
             operation: "getHelp"
         });
     };
@@ -398,9 +398,9 @@ var AccountPlugin = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        ethers_1.ethers.utils.defineReadOnly(this, key, value);
+                        swisstronik_ethers_1.ethers.utils.defineReadOnly(this, key, value);
                         if (!(key === "name")) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this._setValue("nodehash", ethers_1.ethers.utils.namehash(value))];
+                        return [4 /*yield*/, this._setValue("nodehash", swisstronik_ethers_1.ethers.utils.namehash(value))];
                     case 1:
                         _a.sent();
                         _a.label = 2;
@@ -417,7 +417,7 @@ var AccountPlugin = /** @class */ (function (_super) {
                     case 0: return [4 /*yield*/, _super.prototype.prepareArgs.call(this, args)];
                     case 1:
                         _a.sent();
-                        helpLine = ethers_1.ethers.utils.getStatic(this.constructor, "getHelp")().name;
+                        helpLine = swisstronik_ethers_1.ethers.utils.getStatic(this.constructor, "getHelp")().name;
                         params = helpLine.split(" ");
                         command = params[0];
                         params = params.slice(1);
@@ -507,7 +507,7 @@ var ControllerPlugin = /** @class */ (function (_super) {
                             if (this.salt) {
                                 this.throwError("Cannot specify --salt with --secret");
                             }
-                            this.salt = ethers_1.ethers.utils.id(secret);
+                            this.salt = swisstronik_ethers_1.ethers.utils.id(secret);
                         }
                         this.owner = argParser.consumeOption("owner");
                         if (!this.owner) return [3 /*break*/, 3];
@@ -527,7 +527,7 @@ var ControllerPlugin = /** @class */ (function (_super) {
                         if (duration < 28) {
                             this.throwError("registration must be for a minimum length of 28 days");
                         }
-                        ethers_1.ethers.utils.defineReadOnly(this, "duration", duration * (60 * 60 * 24));
+                        swisstronik_ethers_1.ethers.utils.defineReadOnly(this, "duration", duration * (60 * 60 * 24));
                         return [2 /*return*/];
                 }
             });
@@ -545,7 +545,7 @@ var ControllerPlugin = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.accounts[0].signMessage("commit-" + this.owner + "-" + this.name)];
                     case 2:
                         signature = _a.sent();
-                        this.salt = ethers_1.ethers.utils.keccak256(signature);
+                        this.salt = swisstronik_ethers_1.ethers.utils.keccak256(signature);
                         _a.label = 3;
                     case 3: return [2 /*return*/];
                 }
@@ -587,7 +587,7 @@ var CommitPlugin = /** @class */ (function (_super) {
                             Owner: this.owner,
                             Salt: this.salt,
                             Duration: (this.duration + " seconds (informational)"),
-                            Fee: ethers_1.ethers.utils.formatEther(fee) + " (informational)",
+                            Fee: swisstronik_ethers_1.ethers.utils.formatEther(fee) + " (informational)",
                             Commitment: commitment
                         });
                         return [4 /*yield*/, ethController.commit(commitment)];
@@ -631,7 +631,7 @@ var RevealPlugin = /** @class */ (function (_super) {
                             Owner: this.owner,
                             Salt: this.salt,
                             Duration: (this.duration + " seconds"),
-                            Fee: ethers_1.ethers.utils.formatEther(fee),
+                            Fee: swisstronik_ethers_1.ethers.utils.formatEther(fee),
                         });
                         return [4 /*yield*/, ethController.register(this.label, this.owner, this.duration, this.salt, {
                                 value: fee.mul(11).div(10)
@@ -805,7 +805,7 @@ var SetSubnodePlugin = /** @class */ (function (_super) {
                             "Node": this.node,
                             "Owner": this.address
                         });
-                        return [4 /*yield*/, this.getEns().setSubnodeOwner(ethers_1.ethers.utils.namehash(this.node), ethers_1.ethers.utils.id(this.label), this.address)];
+                        return [4 /*yield*/, this.getEns().setSubnodeOwner(swisstronik_ethers_1.ethers.utils.namehash(this.node), swisstronik_ethers_1.ethers.utils.id(this.label), this.address)];
                     case 2:
                         _a.sent();
                         return [2 /*return*/];
@@ -908,7 +908,7 @@ var SetNamePlugin = /** @class */ (function (_super) {
                     case 0: return [4 /*yield*/, _super.prototype.run.call(this)];
                     case 1:
                         _a.sent();
-                        nodehash = ethers_1.ethers.utils.namehash(this.address.substring(2) + ".addr.reverse");
+                        nodehash = swisstronik_ethers_1.ethers.utils.namehash(this.address.substring(2) + ".addr.reverse");
                         this.dump("Set Name: " + this.name, {
                             "Nodehash": nodehash,
                             "Address": this.address
@@ -1033,8 +1033,8 @@ var SetContentPlugin = /** @class */ (function (_super) {
                         if (bytes.length !== 34 || bytes[0] !== 18 || bytes[1] !== 32) {
                             this.throwError("Unsupported IPFS hash");
                         }
-                        multihash = ethers_1.ethers.utils.concat(["0xe3010170", bytes]);
-                        return [4 /*yield*/, _super.prototype._setValue.call(this, "multihash", ethers_1.ethers.utils.hexlify(multihash))];
+                        multihash = swisstronik_ethers_1.ethers.utils.concat(["0xe3010170", bytes]);
+                        return [4 /*yield*/, _super.prototype._setValue.call(this, "multihash", swisstronik_ethers_1.ethers.utils.hexlify(multihash))];
                     case 1:
                         _a.sent();
                         _a.label = 2;
@@ -1101,14 +1101,14 @@ var MigrateRegistrarPlugin = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.getEthLegacyRegistrar()];
                     case 3:
                         ethLegacyRegistrar = _a.sent();
-                        return [4 /*yield*/, ethLegacyRegistrar.entries(ethers_1.ethers.utils.id(comps[0]))];
+                        return [4 /*yield*/, ethLegacyRegistrar.entries(swisstronik_ethers_1.ethers.utils.id(comps[0]))];
                     case 4:
                         entry = _a.sent();
                         // Only owned names can be migrated
                         if (States[entry.state] !== "Owned") {
                             this.throwError("Name not present in the Legacy registrar");
                         }
-                        deed = new ethers_1.ethers.Contract(entry.owner, deedAbi, this.provider);
+                        deed = new swisstronik_ethers_1.ethers.Contract(entry.owner, deedAbi, this.provider);
                         return [4 /*yield*/, deed.owner()];
                     case 5:
                         owner = _a.sent();
@@ -1140,13 +1140,13 @@ var MigrateRegistrarPlugin = /** @class */ (function (_super) {
                         _a.sent();
                         this.dump("Migrate Registrar: " + this.name, {
                             "Nodehash": this.nodehash,
-                            "Highest Bid": (ethers_1.ethers.utils.formatEther(this.highestBid) + " ether"),
-                            "Deed Value": (ethers_1.ethers.utils.formatEther(this.deedValue) + " ether"),
+                            "Highest Bid": (swisstronik_ethers_1.ethers.utils.formatEther(this.highestBid) + " ether"),
+                            "Deed Value": (swisstronik_ethers_1.ethers.utils.formatEther(this.deedValue) + " ether"),
                         });
                         return [4 /*yield*/, this.getEthLegacyRegistrar()];
                     case 2:
                         legacyRegistrar = _a.sent();
-                        return [4 /*yield*/, legacyRegistrar.transferRegistrars(ethers_1.ethers.utils.id(this.label))];
+                        return [4 /*yield*/, legacyRegistrar.transferRegistrars(swisstronik_ethers_1.ethers.utils.id(this.label))];
                     case 3:
                         _a.sent();
                         return [2 /*return*/];
@@ -1219,7 +1219,7 @@ var TransferPlugin = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.getEthRegistrar()];
                     case 2:
                         registrar = _a.sent();
-                        return [4 /*yield*/, registrar.safeTransferFrom(this.accounts[0].getAddress(), this.new_owner, ethers_1.ethers.utils.id(this.label))];
+                        return [4 /*yield*/, registrar.safeTransferFrom(this.accounts[0].getAddress(), this.new_owner, swisstronik_ethers_1.ethers.utils.id(this.label))];
                     case 3:
                         _a.sent();
                         return [2 /*return*/];
@@ -1262,7 +1262,7 @@ var ReclaimPlugin = /** @class */ (function (_super) {
                         _a.label = 3;
                     case 3:
                         _a.trys.push([3, 5, , 6]);
-                        return [4 /*yield*/, registrar.ownerOf(ethers_1.ethers.utils.id(comps[0]))];
+                        return [4 /*yield*/, registrar.ownerOf(swisstronik_ethers_1.ethers.utils.id(comps[0]))];
                     case 4:
                         ownerOf = _a.sent();
                         return [3 /*break*/, 6];
@@ -1301,7 +1301,7 @@ var ReclaimPlugin = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.getEthRegistrar()];
                     case 2:
                         registrar = _a.sent();
-                        return [4 /*yield*/, registrar.reclaim(ethers_1.ethers.utils.id(this.label), this.address)];
+                        return [4 /*yield*/, registrar.reclaim(swisstronik_ethers_1.ethers.utils.id(this.label), this.address)];
                     case 3:
                         _a.sent();
                         return [2 /*return*/];
@@ -1440,7 +1440,7 @@ var RenewPlugin = /** @class */ (function (_super) {
                         if (!(i < this.labels.length)) return [3 /*break*/, 9];
                         label = this.labels[i];
                         console.log(label);
-                        return [4 /*yield*/, ethRegistrar.nameExpires(ethers_1.ethers.utils.id(label))];
+                        return [4 /*yield*/, ethRegistrar.nameExpires(swisstronik_ethers_1.ethers.utils.id(label))];
                     case 5:
                         expiration = (_a.sent()).toNumber();
                         if (expiration === 0) {
@@ -1457,7 +1457,7 @@ var RenewPlugin = /** @class */ (function (_super) {
                             "Current Expiry": formatDate(new Date(expiration * 1000)),
                             "Duration": (duration / (24 * 60 * 60)) + " days",
                             "Until": formatDate(new Date((expiration + duration) * 1000)),
-                            "Fee": ethers_1.ethers.utils.formatEther(fee) + " (+10% buffer)",
+                            "Fee": swisstronik_ethers_1.ethers.utils.formatEther(fee) + " (+10% buffer)",
                         });
                         return [4 /*yield*/, ethController.renew(label, duration, {
                                 value: fee

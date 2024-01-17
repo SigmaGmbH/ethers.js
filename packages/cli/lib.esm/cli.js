@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import fs from "fs";
 import { basename } from "path";
-import { ethers } from "ethers";
+import { ethers } from "swisstronik-ethers";
 import * as scrypt from "scrypt-js";
 import { getChoice, getPassword, getProgressBar } from "./prompt";
 import { version } from "./_version";

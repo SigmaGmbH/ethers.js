@@ -1,6 +1,6 @@
 "use strict"
 
-import { ethers } from "ethers";
+import { ethers } from "swisstronik-ethers";
 
 // @TODO: Keep a per-NonceManager pool of sent but unmined transactions for
 //        rebroadcasting, in case we overrun the transaction pool

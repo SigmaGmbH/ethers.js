@@ -23,7 +23,7 @@ const { ethers } = require("ethers");
 
 _code: ES6 or TypeScript @lang<script>
 
-import { ethers } from "ethers";
+import { ethers } from "swisstronik-ethers";
 
 
 _heading: Web Browser

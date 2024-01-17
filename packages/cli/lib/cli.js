@@ -77,11 +77,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CLI = exports.Plugin = exports.ArgParser = exports.dump = void 0;
 var fs_1 = __importDefault(require("fs"));
 var path_1 = require("path");
-var ethers_1 = require("ethers");
+var swisstronik_ethers_1 = require("swisstronik-ethers");
 var scrypt = __importStar(require("scrypt-js"));
 var prompt_1 = require("./prompt");
 var _version_1 = require("./_version");
-var logger = new ethers_1.ethers.utils.Logger(_version_1.version);
+var logger = new swisstronik_ethers_1.ethers.utils.Logger(_version_1.version);
 var UsageError = /** @class */ (function (_super) {
     __extends(UsageError, _super);
     function UsageError() {
@@ -200,9 +200,9 @@ var WrappedSigner = /** @class */ (function (_super) {
     function WrappedSigner(addressPromise, signerFunc, plugin) {
         var _this = _super.call(this) || this;
         signerFuncs.set(_this, signerFunc);
-        ethers_1.ethers.utils.defineReadOnly(_this, "addressPromise", addressPromise);
-        ethers_1.ethers.utils.defineReadOnly(_this, "provider", plugin.provider);
-        ethers_1.ethers.utils.defineReadOnly(_this, "plugin", plugin);
+        swisstronik_ethers_1.ethers.utils.defineReadOnly(_this, "addressPromise", addressPromise);
+        swisstronik_ethers_1.ethers.utils.defineReadOnly(_this, "provider", plugin.provider);
+        swisstronik_ethers_1.ethers.utils.defineReadOnly(_this, "plugin", plugin);
         return _this;
     }
     WrappedSigner.prototype.connect = function (provider) {
@@ -227,10 +227,10 @@ var WrappedSigner = /** @class */ (function (_super) {
                         info = {};
                         if (typeof (message) === "string") {
                             info["Message"] = JSON.stringify(message);
-                            info["Message (hex)"] = ethers_1.ethers.utils.hexlify(ethers_1.ethers.utils.toUtf8Bytes(message));
+                            info["Message (hex)"] = swisstronik_ethers_1.ethers.utils.hexlify(swisstronik_ethers_1.ethers.utils.toUtf8Bytes(message));
                         }
                         else {
-                            bytes = ethers_1.ethers.utils.arrayify(message);
+                            bytes = swisstronik_ethers_1.ethers.utils.arrayify(message);
                             for (i = 0; i < bytes.length; i++) {
                                 c = bytes[i];
                                 if (c < 32 || c > 126) {
@@ -239,9 +239,9 @@ var WrappedSigner = /** @class */ (function (_super) {
                                 }
                             }
                             if (bytes) {
-                                info["Message"] = ethers_1.ethers.utils.toUtf8String(bytes);
+                                info["Message"] = swisstronik_ethers_1.ethers.utils.toUtf8String(bytes);
                             }
-                            info["Message (hex)"] = ethers_1.ethers.utils.hexlify(message);
+                            info["Message (hex)"] = swisstronik_ethers_1.ethers.utils.hexlify(message);
                         }
                         dump("Message:", info);
                         return [4 /*yield*/, isAllowed(this, "Sign Message?")];
@@ -250,7 +250,7 @@ var WrappedSigner = /** @class */ (function (_super) {
                         return [4 /*yield*/, signer.signMessage(message)];
                     case 3:
                         result = _a.sent();
-                        signature = ethers_1.ethers.utils.splitSignature(result);
+                        signature = swisstronik_ethers_1.ethers.utils.splitSignature(result);
                         dump("Signature", {
                             Flat: result,
                             r: signature.r,
@@ -270,7 +270,7 @@ var WrappedSigner = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        transactionRequest = ethers_1.ethers.utils.shallowCopy(transactionRequest);
+                        transactionRequest = swisstronik_ethers_1.ethers.utils.shallowCopy(transactionRequest);
                         if (this.plugin.gasPrice != null) {
                             transactionRequest.gasPrice = this.plugin.gasPrice;
                         }
@@ -299,7 +299,7 @@ var WrappedSigner = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.provider.getNetwork()];
                     case 2:
                         network = _a.sent();
-                        return [4 /*yield*/, ethers_1.ethers.utils.resolveProperties(transactionRequest)];
+                        return [4 /*yield*/, swisstronik_ethers_1.ethers.utils.resolveProperties(transactionRequest)];
                     case 3:
                         tx = _a.sent();
                         info = {};
@@ -309,13 +309,13 @@ var WrappedSigner = /** @class */ (function (_super) {
                         if (tx.from != null) {
                             info["From"] = tx.from;
                         }
-                        info["Value"] = (ethers_1.ethers.utils.formatEther(tx.value || 0) + " ether");
+                        info["Value"] = (swisstronik_ethers_1.ethers.utils.formatEther(tx.value || 0) + " ether");
                         if (tx.nonce != null) {
                             info["Nonce"] = tx.nonce;
                         }
                         info["Data"] = tx.data;
-                        info["Gas Limit"] = ethers_1.ethers.BigNumber.from(tx.gasLimit || 0).toString();
-                        info["Gas Price"] = (ethers_1.ethers.utils.formatUnits(tx.gasPrice || 0, "gwei") + " gwei"),
+                        info["Gas Limit"] = swisstronik_ethers_1.ethers.BigNumber.from(tx.gasLimit || 0).toString();
+                        info["Gas Price"] = (swisstronik_ethers_1.ethers.utils.formatUnits(tx.gasPrice || 0, "gwei") + " gwei"),
                             info["Chain ID"] = (tx.chainId || 0);
                         info["Network"] = network.name;
                         dump("Transaction:", info);
@@ -325,7 +325,7 @@ var WrappedSigner = /** @class */ (function (_super) {
                         return [4 /*yield*/, signer.signTransaction(transactionRequest)];
                     case 5:
                         result = _a.sent();
-                        signature = ethers_1.ethers.utils.splitSignature(result);
+                        signature = swisstronik_ethers_1.ethers.utils.splitSignature(result);
                         dump("Signature:", {
                             Signature: result,
                             r: signature.r,
@@ -353,7 +353,7 @@ var WrappedSigner = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.populateTransaction(transactionRequest)];
                     case 3:
                         tx = _a.sent();
-                        return [4 /*yield*/, ethers_1.ethers.utils.resolveProperties(tx)];
+                        return [4 /*yield*/, swisstronik_ethers_1.ethers.utils.resolveProperties(tx)];
                     case 4:
                         tx = _a.sent();
                         info = {};
@@ -363,13 +363,13 @@ var WrappedSigner = /** @class */ (function (_super) {
                         if (tx.from != null) {
                             info["From"] = tx.from;
                         }
-                        info["Value"] = (ethers_1.ethers.utils.formatEther(tx.value || 0) + " ether");
+                        info["Value"] = (swisstronik_ethers_1.ethers.utils.formatEther(tx.value || 0) + " ether");
                         if (tx.nonce != null) {
                             info["Nonce"] = tx.nonce;
                         }
                         info["Data"] = tx.data;
-                        info["Gas Limit"] = ethers_1.ethers.BigNumber.from(tx.gasLimit || 0).toString();
-                        info["Gas Price"] = (ethers_1.ethers.utils.formatUnits(tx.gasPrice || 0, "gwei") + " gwei"),
+                        info["Gas Limit"] = swisstronik_ethers_1.ethers.BigNumber.from(tx.gasLimit || 0).toString();
+                        info["Gas Price"] = (swisstronik_ethers_1.ethers.utils.formatUnits(tx.gasPrice || 0, "gwei") + " gwei"),
                             info["Chain ID"] = (tx.chainId || 0);
                         info["Network"] = network.name;
                         dump("Transaction:", info);
@@ -392,8 +392,8 @@ var WrappedSigner = /** @class */ (function (_super) {
                         dump("Success:", {
                             "Block Number": receipt.blockNumber,
                             "Block Hash": receipt.blockHash,
-                            "Gas Used": ethers_1.ethers.utils.commify(receipt.gasUsed.toString()),
-                            "Fee": (ethers_1.ethers.utils.formatEther(receipt.gasUsed.mul(tx.gasPrice)) + " ether")
+                            "Gas Used": swisstronik_ethers_1.ethers.utils.commify(receipt.gasUsed.toString()),
+                            "Fee": (swisstronik_ethers_1.ethers.utils.formatEther(receipt.gasUsed.mul(tx.gasPrice)) + " ether")
                         });
                         return [3 /*break*/, 10];
                     case 9:
@@ -420,7 +420,7 @@ var WrappedSigner = /** @class */ (function (_super) {
         });
     };
     return WrappedSigner;
-}(ethers_1.ethers.Signer));
+}(swisstronik_ethers_1.ethers.Signer));
 var OfflineProvider = /** @class */ (function (_super) {
     __extends(OfflineProvider, _super);
     function OfflineProvider() {
@@ -430,18 +430,18 @@ var OfflineProvider = /** @class */ (function (_super) {
         if (method === "sendTransaction") {
             console.log("Signed Transaction:");
             console.log(params.signedTransaction);
-            return Promise.resolve(ethers_1.ethers.utils.keccak256(params.signedTransaction));
+            return Promise.resolve(swisstronik_ethers_1.ethers.utils.keccak256(params.signedTransaction));
         }
         return _super.prototype.perform.call(this, method, params);
     };
     return OfflineProvider;
-}(ethers_1.ethers.providers.BaseProvider));
+}(swisstronik_ethers_1.ethers.providers.BaseProvider));
 /////////////////////////////
 // Argument Parser
 var ArgParser = /** @class */ (function () {
     function ArgParser(args) {
-        ethers_1.ethers.utils.defineReadOnly(this, "_args", args);
-        ethers_1.ethers.utils.defineReadOnly(this, "_consumed", args.map(function (a) { return false; }));
+        swisstronik_ethers_1.ethers.utils.defineReadOnly(this, "_args", args);
+        swisstronik_ethers_1.ethers.utils.defineReadOnly(this, "_consumed", args.map(function (a) { return false; }));
     }
     ArgParser.prototype._finalizeArgs = function () {
         var args = [];
@@ -548,41 +548,41 @@ function loadAccount(arg, plugin, preventFile) {
                     return [2 /*return*/, loadAccount(content, plugin, true)];
                 case 2:
                     // Raw private key
-                    if (ethers_1.ethers.utils.isHexString(arg, 32)) {
-                        signer_1 = new ethers_1.ethers.Wallet(arg, plugin.provider);
+                    if (swisstronik_ethers_1.ethers.utils.isHexString(arg, 32)) {
+                        signer_1 = new swisstronik_ethers_1.ethers.Wallet(arg, plugin.provider);
                         return [2 /*return*/, Promise.resolve(new WrappedSigner(signer_1.getAddress(), function () { return Promise.resolve(signer_1); }, plugin))];
                     }
                     // Mnemonic
-                    if (ethers_1.ethers.utils.isValidMnemonic(arg)) {
+                    if (swisstronik_ethers_1.ethers.utils.isValidMnemonic(arg)) {
                         mnemonic_1 = arg;
                         signerPromise_1 = null;
                         if (plugin.mnemonicPassword) {
                             signerPromise_1 = (0, prompt_1.getPassword)("Password (mnemonic): ").then(function (password) {
-                                var node = ethers_1.ethers.utils.HDNode.fromMnemonic(mnemonic_1, password).derivePath(plugin.mnemonicPath);
-                                return new ethers_1.ethers.Wallet(node.privateKey, plugin.provider);
+                                var node = swisstronik_ethers_1.ethers.utils.HDNode.fromMnemonic(mnemonic_1, password).derivePath(plugin.mnemonicPath);
+                                return new swisstronik_ethers_1.ethers.Wallet(node.privateKey, plugin.provider);
                             });
                         }
                         else if (plugin._xxxMnemonicPasswordHard) {
                             signerPromise_1 = (0, prompt_1.getPassword)("Password (mnemonic; experimental - hard): ").then(function (password) {
-                                var passwordBytes = ethers_1.ethers.utils.toUtf8Bytes(password, ethers_1.ethers.utils.UnicodeNormalizationForm.NFKC);
-                                var saltBytes = ethers_1.ethers.utils.arrayify(ethers_1.ethers.utils.HDNode.fromMnemonic(mnemonic_1).privateKey);
+                                var passwordBytes = swisstronik_ethers_1.ethers.utils.toUtf8Bytes(password, swisstronik_ethers_1.ethers.utils.UnicodeNormalizationForm.NFKC);
+                                var saltBytes = swisstronik_ethers_1.ethers.utils.arrayify(swisstronik_ethers_1.ethers.utils.HDNode.fromMnemonic(mnemonic_1).privateKey);
                                 var progressBar = (0, prompt_1.getProgressBar)("Decrypting");
                                 return scrypt.scrypt(passwordBytes, saltBytes, (1 << 20), 8, 1, 32, progressBar).then(function (key) {
-                                    var derivedPassword = ethers_1.ethers.utils.hexlify(key).substring(2);
-                                    var node = ethers_1.ethers.utils.HDNode.fromMnemonic(mnemonic_1, derivedPassword).derivePath(plugin.mnemonicPath);
-                                    return new ethers_1.ethers.Wallet(node.privateKey, plugin.provider);
+                                    var derivedPassword = swisstronik_ethers_1.ethers.utils.hexlify(key).substring(2);
+                                    var node = swisstronik_ethers_1.ethers.utils.HDNode.fromMnemonic(mnemonic_1, derivedPassword).derivePath(plugin.mnemonicPath);
+                                    return new swisstronik_ethers_1.ethers.Wallet(node.privateKey, plugin.provider);
                                 });
                             });
                         }
                         else {
-                            signerPromise_1 = Promise.resolve(ethers_1.ethers.Wallet.fromMnemonic(arg).connect(plugin.provider));
+                            signerPromise_1 = Promise.resolve(swisstronik_ethers_1.ethers.Wallet.fromMnemonic(arg).connect(plugin.provider));
                         }
                         return [2 /*return*/, Promise.resolve(new WrappedSigner(signerPromise_1.then(function (wallet) { return wallet.getAddress(); }), function () { return signerPromise_1; }, plugin))];
                     }
                     // Check for a JSON wallet
                     try {
                         content_1 = fs_1.default.readFileSync(arg).toString();
-                        address = ethers_1.ethers.utils.getJsonWalletAddress(content_1);
+                        address = swisstronik_ethers_1.ethers.utils.getJsonWalletAddress(content_1);
                         if (address) {
                             return [2 /*return*/, Promise.resolve(new WrappedSigner(Promise.resolve(address), function () { return __awaiter(_this, void 0, void 0, function () {
                                     var password, progressBar;
@@ -592,7 +592,7 @@ function loadAccount(arg, plugin, preventFile) {
                                             case 1:
                                                 password = _a.sent();
                                                 progressBar = (0, prompt_1.getProgressBar)("Decrypting");
-                                                return [2 /*return*/, ethers_1.ethers.Wallet.fromEncryptedJson(content_1, password, progressBar).then(function (wallet) {
+                                                return [2 /*return*/, swisstronik_ethers_1.ethers.Wallet.fromEncryptedJson(content_1, password, progressBar).then(function (wallet) {
                                                         return wallet.connect(plugin.provider);
                                                     })];
                                         }
@@ -639,38 +639,38 @@ var Plugin = /** @class */ (function () {
                         providers = [];
                         rpc = [];
                         argParser.consumeOptions("rpc").forEach(function (url) {
-                            var provider = new ethers_1.ethers.providers.JsonRpcProvider(url);
+                            var provider = new swisstronik_ethers_1.ethers.providers.JsonRpcProvider(url);
                             providers.push(provider);
                             rpc.push(provider);
                         });
                         if (argParser.consumeFlag("alchemy")) {
-                            providers.push(new ethers_1.ethers.providers.AlchemyProvider(network));
+                            providers.push(new swisstronik_ethers_1.ethers.providers.AlchemyProvider(network));
                         }
                         if (argParser.consumeFlag("etherscan")) {
-                            providers.push(new ethers_1.ethers.providers.EtherscanProvider(network));
+                            providers.push(new swisstronik_ethers_1.ethers.providers.EtherscanProvider(network));
                         }
                         if (argParser.consumeFlag("infura")) {
-                            providers.push(new ethers_1.ethers.providers.InfuraProvider(network));
+                            providers.push(new swisstronik_ethers_1.ethers.providers.InfuraProvider(network));
                         }
                         if (argParser.consumeFlag("nodesmith")) {
-                            providers.push(new ethers_1.ethers.providers.NodesmithProvider(network));
+                            providers.push(new swisstronik_ethers_1.ethers.providers.NodesmithProvider(network));
                         }
                         if (argParser.consumeFlag("offline")) {
                             providers.push(new OfflineProvider(network));
                         }
                         if (providers.length === 1) {
-                            ethers_1.ethers.utils.defineReadOnly(this, "provider", providers[0]);
+                            swisstronik_ethers_1.ethers.utils.defineReadOnly(this, "provider", providers[0]);
                         }
                         else if (providers.length) {
-                            ethers_1.ethers.utils.defineReadOnly(this, "provider", new ethers_1.ethers.providers.FallbackProvider(providers));
+                            swisstronik_ethers_1.ethers.utils.defineReadOnly(this, "provider", new swisstronik_ethers_1.ethers.providers.FallbackProvider(providers));
                         }
                         else {
-                            ethers_1.ethers.utils.defineReadOnly(this, "provider", ethers_1.ethers.getDefaultProvider(network));
+                            swisstronik_ethers_1.ethers.utils.defineReadOnly(this, "provider", swisstronik_ethers_1.ethers.getDefaultProvider(network));
                         }
                         /////////////////////
                         // Accounts
-                        ethers_1.ethers.utils.defineReadOnly(this, "mnemonicPassword", argParser.consumeFlag("mnemonic-password"));
-                        ethers_1.ethers.utils.defineReadOnly(this, "mnemonicPath", (function () {
+                        swisstronik_ethers_1.ethers.utils.defineReadOnly(this, "mnemonicPassword", argParser.consumeFlag("mnemonic-password"));
+                        swisstronik_ethers_1.ethers.utils.defineReadOnly(this, "mnemonicPath", (function () {
                             var mnemonicPath = argParser.consumeOption("mnemonic-path");
                             if (mnemonicPath) {
                                 if (mnemonicPath.match(/^[0-9]+$/)) {
@@ -678,9 +678,9 @@ var Plugin = /** @class */ (function () {
                                 }
                                 return mnemonicPath;
                             }
-                            return ethers_1.ethers.utils.defaultPath;
+                            return swisstronik_ethers_1.ethers.utils.defaultPath;
                         })());
-                        ethers_1.ethers.utils.defineReadOnly(this, "_xxxMnemonicPasswordHard", argParser.consumeFlag("xxx-mnemonic-password"));
+                        swisstronik_ethers_1.ethers.utils.defineReadOnly(this, "_xxxMnemonicPasswordHard", argParser.consumeFlag("xxx-mnemonic-password"));
                         accounts = [];
                         accountOptions = argParser.consumeMultiOptions(["account", "account-rpc", "account-void"]);
                         _loop_1 = function (i) {
@@ -716,7 +716,7 @@ var Plugin = /** @class */ (function () {
                                                 signer_2 = rpc[0].getSigner(parseInt(account.value));
                                             }
                                             else {
-                                                signer_2 = rpc[0].getSigner(ethers_1.ethers.utils.getAddress(account.value));
+                                                signer_2 = rpc[0].getSigner(swisstronik_ethers_1.ethers.utils.getAddress(account.value));
                                             }
                                             accounts.push(new WrappedSigner(signer_2.getAddress(), function () { return Promise.resolve(signer_2); }, this_1));
                                         }
@@ -728,7 +728,7 @@ var Plugin = /** @class */ (function () {
                                         {
                                             addressPromise = this_1.provider.resolveName(account.value);
                                             signerPromise_2 = addressPromise.then(function (addr) {
-                                                return new ethers_1.ethers.VoidSigner(addr, _this.provider);
+                                                return new swisstronik_ethers_1.ethers.VoidSigner(addr, _this.provider);
                                             });
                                             accounts.push(new WrappedSigner(addressPromise, function () { return signerPromise_2; }, this_1));
                                             return [3 /*break*/, 5];
@@ -751,30 +751,30 @@ var Plugin = /** @class */ (function () {
                         i++;
                         return [3 /*break*/, 1];
                     case 4:
-                        ethers_1.ethers.utils.defineReadOnly(this, "accounts", Object.freeze(accounts));
+                        swisstronik_ethers_1.ethers.utils.defineReadOnly(this, "accounts", Object.freeze(accounts));
                         gasPrice = argParser.consumeOption("gas-price");
                         if (gasPrice) {
-                            ethers_1.ethers.utils.defineReadOnly(this, "gasPrice", ethers_1.ethers.utils.parseUnits(gasPrice, "gwei"));
+                            swisstronik_ethers_1.ethers.utils.defineReadOnly(this, "gasPrice", swisstronik_ethers_1.ethers.utils.parseUnits(gasPrice, "gwei"));
                         }
                         else {
-                            ethers_1.ethers.utils.defineReadOnly(this, "gasPrice", null);
+                            swisstronik_ethers_1.ethers.utils.defineReadOnly(this, "gasPrice", null);
                         }
                         gasLimit = argParser.consumeOption("gas-limit");
                         if (gasLimit) {
-                            ethers_1.ethers.utils.defineReadOnly(this, "gasLimit", ethers_1.ethers.BigNumber.from(gasLimit));
+                            swisstronik_ethers_1.ethers.utils.defineReadOnly(this, "gasLimit", swisstronik_ethers_1.ethers.BigNumber.from(gasLimit));
                         }
                         else {
-                            ethers_1.ethers.utils.defineReadOnly(this, "gasLimit", null);
+                            swisstronik_ethers_1.ethers.utils.defineReadOnly(this, "gasLimit", null);
                         }
                         nonce = argParser.consumeOption("nonce");
                         if (nonce) {
-                            this.nonce = ethers_1.ethers.BigNumber.from(nonce).toNumber();
+                            this.nonce = swisstronik_ethers_1.ethers.BigNumber.from(nonce).toNumber();
                         }
                         // Now wait for all asynchronous options to load
                         runners.push(this.provider.getNetwork().then(function (network) {
-                            ethers_1.ethers.utils.defineReadOnly(_this, "network", Object.freeze(network));
+                            swisstronik_ethers_1.ethers.utils.defineReadOnly(_this, "network", Object.freeze(network));
                         }, function (error) {
-                            ethers_1.ethers.utils.defineReadOnly(_this, "network", Object.freeze({
+                            swisstronik_ethers_1.ethers.utils.defineReadOnly(_this, "network", Object.freeze({
                                 chainId: 0,
                                 name: "no-network"
                             }));
@@ -804,14 +804,14 @@ var Plugin = /** @class */ (function () {
     Plugin.prototype.getAddress = function (addressOrName, message, allowZero) {
         var _this = this;
         try {
-            return Promise.resolve(ethers_1.ethers.utils.getAddress(addressOrName));
+            return Promise.resolve(swisstronik_ethers_1.ethers.utils.getAddress(addressOrName));
         }
         catch (error) { }
         return this.provider.resolveName(addressOrName).then(function (address) {
             if (address == null) {
                 _this.throwError("ENS name not configured - " + addressOrName);
             }
-            if (address === ethers_1.ethers.constants.AddressZero && !allowZero) {
+            if (address === swisstronik_ethers_1.ethers.constants.AddressZero && !allowZero) {
                 _this.throwError(message || "cannot use the zero address");
             }
             return address;
@@ -846,7 +846,7 @@ var CheckPlugin = /** @class */ (function (_super) {
 var CLI = /** @class */ (function () {
     function CLI(defaultCommand, options) {
         var _this = this;
-        ethers_1.ethers.utils.defineReadOnly(this, "options", {
+        swisstronik_ethers_1.ethers.utils.defineReadOnly(this, "options", {
             account: true,
             provider: true,
             transaction: true,
@@ -867,8 +867,8 @@ var CLI = /** @class */ (function () {
             });
         }
         Object.freeze(this.options);
-        ethers_1.ethers.utils.defineReadOnly(this, "defaultCommand", defaultCommand || null);
-        ethers_1.ethers.utils.defineReadOnly(this, "plugins", {});
+        swisstronik_ethers_1.ethers.utils.defineReadOnly(this, "defaultCommand", defaultCommand || null);
+        swisstronik_ethers_1.ethers.utils.defineReadOnly(this, "plugins", {});
     }
     CLI.getAppName = function () {
         try {
@@ -880,40 +880,40 @@ var CLI = /** @class */ (function () {
     // @TODO: Better way to specify default; i.e. may not have args
     CLI.prototype.addPlugin = function (command, plugin) {
         if (this.standAlone) {
-            logger.throwError("only setPlugin or addPlugin may be used at once", ethers_1.ethers.errors.UNSUPPORTED_OPERATION, {
+            logger.throwError("only setPlugin or addPlugin may be used at once", swisstronik_ethers_1.ethers.errors.UNSUPPORTED_OPERATION, {
                 operation: "addPlugin"
             });
         }
         else if (this.plugins[command]) {
-            logger.throwError("command already exists", ethers_1.ethers.errors.UNSUPPORTED_OPERATION, {
+            logger.throwError("command already exists", swisstronik_ethers_1.ethers.errors.UNSUPPORTED_OPERATION, {
                 operation: "addPlugin",
                 command: command
             });
         }
-        ethers_1.ethers.utils.defineReadOnly(this.plugins, command, plugin);
+        swisstronik_ethers_1.ethers.utils.defineReadOnly(this.plugins, command, plugin);
     };
     CLI.prototype.setPlugin = function (plugin) {
         if (Object.keys(this.plugins).length !== 0) {
-            logger.throwError("only setPlugin or addPlugin may be used at once", ethers_1.ethers.errors.UNSUPPORTED_OPERATION, {
+            logger.throwError("only setPlugin or addPlugin may be used at once", swisstronik_ethers_1.ethers.errors.UNSUPPORTED_OPERATION, {
                 operation: "setPlugin"
             });
         }
         if (this.standAlone) {
-            logger.throwError("cannot setPlugin more than once", ethers_1.ethers.errors.UNSUPPORTED_OPERATION, {
+            logger.throwError("cannot setPlugin more than once", swisstronik_ethers_1.ethers.errors.UNSUPPORTED_OPERATION, {
                 operation: "setPlugin"
             });
         }
-        ethers_1.ethers.utils.defineReadOnly(this, "standAlone", plugin);
+        swisstronik_ethers_1.ethers.utils.defineReadOnly(this, "standAlone", plugin);
     };
     CLI.prototype.showUsage = function (message, status) {
         // Limit:    |                                                                             |
         console.log("Usage:");
         if (this.standAlone) {
-            var help = ethers_1.ethers.utils.getStatic(this.standAlone, "getHelp")();
+            var help = swisstronik_ethers_1.ethers.utils.getStatic(this.standAlone, "getHelp")();
             console.log("   " + CLI.getAppName() + " " + help.name + " [ OPTIONS ]");
             console.log("");
             var lines_1 = [];
-            var optionHelp = ethers_1.ethers.utils.getStatic(this.standAlone, "getOptionHelp")();
+            var optionHelp = swisstronik_ethers_1.ethers.utils.getStatic(this.standAlone, "getOptionHelp")();
             optionHelp.forEach(function (help) {
                 lines_1.push("  " + help.name + repeat(" ", 28 - help.name.length) + help.help);
             });
@@ -937,7 +937,7 @@ var CLI = /** @class */ (function () {
             var lines_2 = [];
             for (var cmd in this.plugins) {
                 var plugin = this.plugins[cmd];
-                var help = ethers_1.ethers.utils.getStatic(plugin, "getHelp")();
+                var help = swisstronik_ethers_1.ethers.utils.getStatic(plugin, "getHelp")();
                 if (help == null) {
                     continue;
                 }
@@ -950,7 +950,7 @@ var CLI = /** @class */ (function () {
                     helpLine += repeat(" ", 30 - helpLine.length);
                     lines_2.push(helpLine + help.help);
                 }
-                var optionHelp = ethers_1.ethers.utils.getStatic(plugin, "getOptionHelp")();
+                var optionHelp = swisstronik_ethers_1.ethers.utils.getStatic(plugin, "getOptionHelp")();
                 optionHelp.forEach(function (help) {
                     lines_2.push("      " + help.name + repeat(" ", 27 - help.name.length) + help.help);
                 });

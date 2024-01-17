@@ -1,6 +1,6 @@
 'use strict';
 import assert from 'assert';
-import { ethers } from "ethers";
+import { ethers } from "swisstronik-ethers";
 import { loadTests } from "@ethersproject/testcases";
 describe('Private key generation', function () {
     let tests = loadTests('accounts');

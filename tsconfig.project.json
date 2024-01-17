@@ -10,6 +10,12 @@
   },
   "references": [
     {
+      "path": "./packages/asm"
+    },
+    {
+      "path": "./packages/hardware-wallets"
+    },
+    {
       "path": "./packages/logger"
     },
     {
@@ -37,6 +43,9 @@
       "path": "./packages/basex"
     },
     {
+      "path": "./packages/cli"
+    },
+    {
       "path": "./packages/random"
     },
     {
@@ -61,6 +70,12 @@
       "path": "./packages/solidity"
     },
     {
+      "path": "./packages/testcases"
+    },
+    {
+      "path": "./packages/tests"
+    },
+    {
       "path": "./packages/transactions"
     },
     {
@@ -74,6 +89,9 @@
     },
     {
       "path": "./packages/abstract-signer"
+    },
+    {
+      "path": "./packages/experimental"
     },
     {
       "path": "./packages/hash"
@@ -101,24 +119,6 @@
     },
     {
       "path": "./packages/ethers"
-    },
-    {
-      "path": "./packages/asm"
-    },
-    {
-      "path": "./packages/cli"
-    },
-    {
-      "path": "./packages/experimental"
-    },
-    {
-      "path": "./packages/hardware-wallets"
-    },
-    {
-      "path": "./packages/testcases"
-    },
-    {
-      "path": "./packages/tests"
     }
   ],
   "files": []

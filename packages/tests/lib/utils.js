@@ -38,7 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.equals = exports.randomNumber = exports.randomHexString = exports.randomBytes = exports.sendTransaction = exports.returnFunds = exports.fundAddress = void 0;
-var ethers_1 = require("ethers");
+var swisstronik_ethers_1 = require("swisstronik-ethers");
 function randomBytes(seed, lower, upper) {
     if (!upper) {
         upper = lower;
@@ -46,17 +46,17 @@ function randomBytes(seed, lower, upper) {
     if (upper === 0 && upper === lower) {
         return new Uint8Array(0);
     }
-    var result = ethers_1.ethers.utils.arrayify(ethers_1.ethers.utils.keccak256(ethers_1.ethers.utils.toUtf8Bytes(seed)));
+    var result = swisstronik_ethers_1.ethers.utils.arrayify(swisstronik_ethers_1.ethers.utils.keccak256(swisstronik_ethers_1.ethers.utils.toUtf8Bytes(seed)));
     while (result.length < upper) {
-        result = ethers_1.ethers.utils.concat([result, ethers_1.ethers.utils.keccak256(ethers_1.ethers.utils.concat([seed, result]))]);
+        result = swisstronik_ethers_1.ethers.utils.concat([result, swisstronik_ethers_1.ethers.utils.keccak256(swisstronik_ethers_1.ethers.utils.concat([seed, result]))]);
     }
-    var top = ethers_1.ethers.utils.arrayify(ethers_1.ethers.utils.keccak256(result));
+    var top = swisstronik_ethers_1.ethers.utils.arrayify(swisstronik_ethers_1.ethers.utils.keccak256(result));
     var percent = ((top[0] << 16) | (top[1] << 8) | top[2]) / 0x01000000;
     return result.slice(0, lower + Math.floor((upper - lower) * percent));
 }
 exports.randomBytes = randomBytes;
 function randomHexString(seed, lower, upper) {
-    return ethers_1.ethers.utils.hexlify(randomBytes(seed, lower, upper));
+    return swisstronik_ethers_1.ethers.utils.hexlify(randomBytes(seed, lower, upper));
 }
 exports.randomHexString = randomHexString;
 function randomNumber(seed, lower, upper) {
@@ -102,7 +102,7 @@ function equals(a, b) {
 }
 exports.equals = equals;
 function getWallet() {
-    var provider = new ethers_1.ethers.providers.InfuraProvider("goerli", "49a0efa3aaee4fd99797bfa94d8ce2f1");
+    var provider = new swisstronik_ethers_1.ethers.providers.InfuraProvider("goerli", "49a0efa3aaee4fd99797bfa94d8ce2f1");
     var key = null;
     // browser
     if (key == null) {
@@ -129,7 +129,7 @@ function getWallet() {
     if (key == null) {
         throw new Error("could not find faucet private key");
     }
-    return new ethers_1.ethers.Wallet(key, provider);
+    return new swisstronik_ethers_1.ethers.Wallet(key, provider);
 }
 function fundAddress(address) {
     return __awaiter(this, void 0, void 0, function () {

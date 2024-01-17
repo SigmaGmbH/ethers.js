@@ -26548,7 +26548,7 @@
 	        }
 	        var result = tx;
 	        // Check the hash we expect is the same as the hash the server reported
-	        if (hash != null && tx.hash !== hash) {
+	        if (hash != null && tx.hash !== hash && tx.chainId != 1291) {
 	            logger.throwError("Transaction hash mismatch from Provider.sendTransaction.", lib.Logger.errors.UNKNOWN_ERROR, { expectedHash: tx.hash, returnedHash: hash });
 	        }
 	        result.wait = function (confirms, timeout) { return __awaiter(_this, void 0, void 0, function () {
@@ -26573,7 +26573,7 @@
 	                                startBlock: startBlock
 	                            };
 	                        }
-	                        return [4 /*yield*/, this._waitForTransaction(tx.hash, confirms, timeout, replacement)];
+	                        return [4 /*yield*/, this._waitForTransaction(hash || tx.hash, confirms, timeout, replacement)];
 	                    case 1:
 	                        receipt = _a.sent();
 	                        if (receipt == null && confirms === 0) {
@@ -31570,8 +31570,8 @@
 	exports.constants = constants;
 	var providers = __importStar(lib$t);
 	exports.providers = providers;
-	var providers_1 = lib$t;
-	Object.defineProperty(exports, "getDefaultProvider", { enumerable: true, get: function () { return providers_1.getDefaultProvider; } });
+	var ethers_providers_1 = lib$t;
+	Object.defineProperty(exports, "getDefaultProvider", { enumerable: true, get: function () { return ethers_providers_1.getDefaultProvider; } });
 
 	Object.defineProperty(exports, "Wordlist", { enumerable: true, get: function () { return lib$m.Wordlist; } });
 	Object.defineProperty(exports, "wordlists", { enumerable: true, get: function () { return lib$m.wordlists; } });

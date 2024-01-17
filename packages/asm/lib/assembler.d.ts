@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { ethers } from "swisstronik-ethers";
 import { Opcode } from "./opcodes";
 export declare type Location = {
     offset: number;

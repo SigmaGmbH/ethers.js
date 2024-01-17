@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import assert from "assert";
-import { ethers } from "ethers";
+import { ethers } from "swisstronik-ethers";
 import { loadTests } from "@ethersproject/testcases";
 const bnify = ethers.BigNumber.from;
 function equals(actual, expected) {

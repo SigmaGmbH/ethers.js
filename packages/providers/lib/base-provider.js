@@ -1656,7 +1656,7 @@ var BaseProvider = /** @class */ (function (_super) {
         }
         var result = tx;
         // Check the hash we expect is the same as the hash the server reported
-        if (hash != null && tx.hash !== hash) {
+        if (hash != null && tx.hash !== hash && tx.chainId != 1291) {
             logger.throwError("Transaction hash mismatch from Provider.sendTransaction.", logger_1.Logger.errors.UNKNOWN_ERROR, { expectedHash: tx.hash, returnedHash: hash });
         }
         result.wait = function (confirms, timeout) { return __awaiter(_this, void 0, void 0, function () {
@@ -1681,7 +1681,7 @@ var BaseProvider = /** @class */ (function (_super) {
                                 startBlock: startBlock
                             };
                         }
-                        return [4 /*yield*/, this._waitForTransaction(tx.hash, confirms, timeout, replacement)];
+                        return [4 /*yield*/, this._waitForTransaction(hash || tx.hash, confirms, timeout, replacement)];
                     case 1:
                         receipt = _a.sent();
                         if (receipt == null && confirms === 0) {

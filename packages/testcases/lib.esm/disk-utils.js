@@ -1,6 +1,6 @@
 'use strict';
 import inflate from "tiny-inflate";
-import { ethers } from "ethers";
+import { ethers } from "swisstronik-ethers";
 // This file is populated by the rollup-pre-alias.config.js
 import data from "./browser-data.json";
 export function saveTests(tag, data) {

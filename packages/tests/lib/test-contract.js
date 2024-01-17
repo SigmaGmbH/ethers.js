@@ -40,14 +40,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var assert_1 = __importDefault(require("assert"));
-var ethers_1 = require("ethers");
+var swisstronik_ethers_1 = require("swisstronik-ethers");
 var utils_1 = require("./utils");
 var test_contract_json_1 = __importDefault(require("./test-contract.json"));
-var provider = new ethers_1.ethers.providers.InfuraProvider("goerli", "49a0efa3aaee4fd99797bfa94d8ce2f1");
+var provider = new swisstronik_ethers_1.ethers.providers.InfuraProvider("goerli", "49a0efa3aaee4fd99797bfa94d8ce2f1");
 //const provider = ethers.getDefaultProvider("rinkeby");
 var TIMEOUT_PERIOD = 120000;
 var contract = (function () {
-    return new ethers_1.ethers.Contract(test_contract_json_1.default.contractAddress, test_contract_json_1.default.interface, provider);
+    return new swisstronik_ethers_1.ethers.Contract(test_contract_json_1.default.contractAddress, test_contract_json_1.default.interface, provider);
 })();
 function equals(name, actual, expected) {
     if (Array.isArray(expected)) {
@@ -59,7 +59,7 @@ function equals(name, actual, expected) {
     }
     if (typeof (actual) === 'object') {
         if (expected.indexed) {
-            assert_1.default.ok(ethers_1.ethers.Contract.isIndexed(actual), 'index property has index - ' + name);
+            assert_1.default.ok(swisstronik_ethers_1.ethers.Contract.isIndexed(actual), 'index property has index - ' + name);
             if (expected.hash) {
                 assert_1.default.equal(actual.hash, expected.hash, 'index property with known hash matches - ' + name);
             }
@@ -200,8 +200,8 @@ describe("Test Contract Transaction Population", function () {
     var testAddress = "0xdeadbeef00deadbeef01deadbeef02deadbeef03";
     var testAddressCheck = "0xDEAdbeeF00deAdbeEF01DeAdBEEF02DeADBEEF03";
     var fireflyAddress = "0x8ba1f109551bD432803012645Ac136ddd64DBA72";
-    var contract = new ethers_1.ethers.Contract(testAddress, abi);
-    var contractConnected = contract.connect(ethers_1.ethers.getDefaultProvider());
+    var contract = new swisstronik_ethers_1.ethers.Contract(testAddress, abi);
+    var contractConnected = contract.connect(swisstronik_ethers_1.ethers.getDefaultProvider());
     it("standard population", function () {
         return __awaiter(this, void 0, void 0, function () {
             var tx;

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import EventEmitter from "events";
-import { ethers } from "ethers";
+import { ethers } from "swisstronik-ethers";
 import { version } from "./_version";
 const logger = new ethers.utils.Logger(version);
 /*

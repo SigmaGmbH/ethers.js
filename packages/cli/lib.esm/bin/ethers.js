@@ -13,7 +13,7 @@ import fs from "fs";
 import { dirname, resolve } from "path";
 import REPL from "repl";
 import vm from "vm";
-import { ethers } from "ethers";
+import { ethers } from "swisstronik-ethers";
 import { parseExpression as babelParseExpression } from "@babel/parser";
 import { CLI, dump, Plugin } from "../cli";
 import { getPassword, getProgressBar } from "../prompt";

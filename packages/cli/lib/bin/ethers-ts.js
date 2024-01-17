@@ -57,13 +57,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var fs_1 = __importDefault(require("fs"));
 var path_1 = require("path");
-var ethers_1 = require("ethers");
+var swisstronik_ethers_1 = require("swisstronik-ethers");
 var cli_1 = require("../cli");
 var typescript_1 = require("../typescript");
 var solc_1 = require("../solc");
 function computeHash(content) {
     var bareContent = content.replace(/\/\*\* Content Hash: 0x[0-9A-F]{64} \*\//i, '/** Content Hash: */');
-    return ethers_1.ethers.utils.id(bareContent);
+    return swisstronik_ethers_1.ethers.utils.id(bareContent);
 }
 function checkHash(content) {
     var match = content.match(/\/\*\* Content Hash: (0x[0-9A-F]{64}) \*\//i);

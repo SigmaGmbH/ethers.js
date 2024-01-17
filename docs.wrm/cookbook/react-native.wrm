@@ -33,7 +33,7 @@ _code: Importing @lang<script>
 import "@ethersproject/shims"
 
 // Import the ethers library
-import { ethers } from "ethers";
+import { ethers } from "swisstronik-ethers";
 
 
 _subsection: Security @<cookbook-reactnative-security>
@@ -57,4 +57,4 @@ import "react-native-get-random-values"
 import "@ethersproject/shims"
 
 // Import the ethers library
-import { ethers } from "ethers";
+import { ethers } from "swisstronik-ethers";

@@ -2,7 +2,7 @@
 
 'use strict';
 
-import { ethers } from "ethers";
+import { ethers } from "swisstronik-ethers";
 import { Base58 } from "@ethersproject/basex";
 
 import { ArgParser, CLI, Help, Plugin } from '../cli';

@@ -55,9 +55,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LedgerSigner = void 0;
-var ethers_1 = require("ethers");
+var swisstronik_ethers_1 = require("swisstronik-ethers");
 var _version_1 = require("./_version");
-var logger = new ethers_1.ethers.utils.Logger(_version_1.version);
+var logger = new swisstronik_ethers_1.ethers.utils.Logger(_version_1.version);
 var hw_app_eth_1 = __importDefault(require("@ledgerhq/hw-app-eth"));
 // We store these in a separated import so it is easier to swap them out
 // at bundle time; browsers do not get HID, for example. This maps a string
@@ -79,14 +79,14 @@ var LedgerSigner = /** @class */ (function (_super) {
         if (type == null) {
             type = "default";
         }
-        ethers_1.ethers.utils.defineReadOnly(_this, "path", path);
-        ethers_1.ethers.utils.defineReadOnly(_this, "type", type);
-        ethers_1.ethers.utils.defineReadOnly(_this, "provider", provider || null);
+        swisstronik_ethers_1.ethers.utils.defineReadOnly(_this, "path", path);
+        swisstronik_ethers_1.ethers.utils.defineReadOnly(_this, "type", type);
+        swisstronik_ethers_1.ethers.utils.defineReadOnly(_this, "provider", provider || null);
         var transport = ledger_transport_1.transports[type];
         if (!transport) {
             logger.throwArgumentError("unknown or unsupported type", "type", type);
         }
-        ethers_1.ethers.utils.defineReadOnly(_this, "_eth", transport.create().then(function (transport) {
+        swisstronik_ethers_1.ethers.utils.defineReadOnly(_this, "_eth", transport.create().then(function (transport) {
             var eth = new hw_app_eth_1.default(transport);
             return eth.getAppConfiguration().then(function (config) {
                 return eth;
@@ -149,7 +149,7 @@ var LedgerSigner = /** @class */ (function (_super) {
                     case 0: return [4 /*yield*/, this._retry(function (eth) { return eth.getAddress(_this.path); })];
                     case 1:
                         account = _a.sent();
-                        return [2 /*return*/, ethers_1.ethers.utils.getAddress(account.address)];
+                        return [2 /*return*/, swisstronik_ethers_1.ethers.utils.getAddress(account.address)];
                 }
             });
         });
@@ -162,15 +162,15 @@ var LedgerSigner = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0:
                         if (typeof (message) === 'string') {
-                            message = ethers_1.ethers.utils.toUtf8Bytes(message);
+                            message = swisstronik_ethers_1.ethers.utils.toUtf8Bytes(message);
                         }
-                        messageHex = ethers_1.ethers.utils.hexlify(message).substring(2);
+                        messageHex = swisstronik_ethers_1.ethers.utils.hexlify(message).substring(2);
                         return [4 /*yield*/, this._retry(function (eth) { return eth.signPersonalMessage(_this.path, messageHex); })];
                     case 1:
                         sig = _a.sent();
                         sig.r = '0x' + sig.r;
                         sig.s = '0x' + sig.s;
-                        return [2 /*return*/, ethers_1.ethers.utils.joinSignature(sig)];
+                        return [2 /*return*/, swisstronik_ethers_1.ethers.utils.joinSignature(sig)];
                 }
             });
         });
@@ -181,7 +181,7 @@ var LedgerSigner = /** @class */ (function (_super) {
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, ethers_1.ethers.utils.resolveProperties(transaction)];
+                    case 0: return [4 /*yield*/, swisstronik_ethers_1.ethers.utils.resolveProperties(transaction)];
                     case 1:
                         tx = _a.sent();
                         baseTx = {
@@ -189,16 +189,16 @@ var LedgerSigner = /** @class */ (function (_super) {
                             data: (tx.data || undefined),
                             gasLimit: (tx.gasLimit || undefined),
                             gasPrice: (tx.gasPrice || undefined),
-                            nonce: (tx.nonce ? ethers_1.ethers.BigNumber.from(tx.nonce).toNumber() : undefined),
+                            nonce: (tx.nonce ? swisstronik_ethers_1.ethers.BigNumber.from(tx.nonce).toNumber() : undefined),
                             to: (tx.to || undefined),
                             value: (tx.value || undefined),
                         };
-                        unsignedTx = ethers_1.ethers.utils.serializeTransaction(baseTx).substring(2);
+                        unsignedTx = swisstronik_ethers_1.ethers.utils.serializeTransaction(baseTx).substring(2);
                         return [4 /*yield*/, this._retry(function (eth) { return eth.signTransaction(_this.path, unsignedTx); })];
                     case 2:
                         sig = _a.sent();
-                        return [2 /*return*/, ethers_1.ethers.utils.serializeTransaction(baseTx, {
-                                v: ethers_1.ethers.BigNumber.from("0x" + sig.v).toNumber(),
+                        return [2 /*return*/, swisstronik_ethers_1.ethers.utils.serializeTransaction(baseTx, {
+                                v: swisstronik_ethers_1.ethers.BigNumber.from("0x" + sig.v).toNumber(),
                                 r: ("0x" + sig.r),
                                 s: ("0x" + sig.s),
                             })];
@@ -210,6 +210,6 @@ var LedgerSigner = /** @class */ (function (_super) {
         return new LedgerSigner(provider, this.type, this.path);
     };
     return LedgerSigner;
-}(ethers_1.ethers.Signer));
+}(swisstronik_ethers_1.ethers.Signer));
 exports.LedgerSigner = LedgerSigner;
 //# sourceMappingURL=ledger.js.map

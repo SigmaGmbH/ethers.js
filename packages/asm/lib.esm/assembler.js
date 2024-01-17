@@ -14,7 +14,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 // - When checking name collisions, verify no collision in javascript
 import { dirname, resolve } from "path";
 import vm from "vm";
-import { ethers } from "ethers";
+import { ethers } from "swisstronik-ethers";
 import { Opcode } from "./opcodes";
 import { parse as _parse, parser as _parser } from "./_parser";
 import { version } from "./_version";
