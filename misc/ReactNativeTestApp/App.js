@@ -29,7 +29,7 @@ import "@ethersproject/shims";
 //import "./libs/shims";
 
 // Import ethers
-import { ethers } from "swisstronik-ethers";
+import { ethers } from "ethers";
 //import { ethers } from "./libs/ethers";
 
 // Import the test framework
