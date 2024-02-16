@@ -674,7 +674,11 @@ export class JsonRpcProvider extends BaseProvider {
 
           const tx = params.transaction;
           const publicKey = await this.detectNodePublicKey();
-          if (method === "estimateGas" || method === "sendTransaction") {
+          if (method === "estimateGas") {
+              let [encryptedData] = encryptDataFieldWithPublicKey(publicKey, tx.data);
+              params.transaction.data = encryptedData;
+          }
+          if (method === "sendTransaction" && tx.data) {
             let [encryptedData] = encryptDataFieldWithPublicKey(publicKey, tx.data);
             params.transaction.data = encryptedData;
           }
