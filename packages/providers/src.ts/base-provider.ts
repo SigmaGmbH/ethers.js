@@ -1518,7 +1518,7 @@ export class BaseProvider extends Provider implements EnsProvider {
         const result = <TransactionResponse>tx;
 
         // Check the hash we expect is the same as the hash the server reported
-        if (hash != null && tx.hash !== hash) {
+        if (hash != null && tx.hash !== hash && tx.chainId != 1291) {
             logger.throwError("Transaction hash mismatch from Provider.sendTransaction.", Logger.errors.UNKNOWN_ERROR, { expectedHash: tx.hash, returnedHash: hash });
         }
 
@@ -1539,7 +1539,7 @@ export class BaseProvider extends Provider implements EnsProvider {
                 };
             }
 
-            const receipt = await this._waitForTransaction(tx.hash, confirms, timeout, replacement);
+            const receipt = await this._waitForTransaction(hash || tx.hash, confirms, timeout, replacement);
             if (receipt == null && confirms === 0) { return null; }
 
             // No longer pending, allow the polling loop to garbage collect this

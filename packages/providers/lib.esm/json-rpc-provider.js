@@ -18,8 +18,9 @@ import { accessListify } from "@ethersproject/transactions";
 import { fetchJson, poll } from "@ethersproject/web";
 import { Logger } from "@ethersproject/logger";
 import { version } from "./_version";
-const logger = new Logger(version);
 import { BaseProvider } from "./base-provider";
+import { decryptNodeResponseWithPublicKey, encryptDataFieldWithPublicKey } from "@swisstronik/utils";
+const logger = new Logger(version);
 const errorGas = ["call", "estimateGas"];
 function spelunk(value, requireData) {
     if (value == null) {
@@ -413,6 +414,33 @@ export class JsonRpcProvider extends BaseProvider {
         }
         return this._cache["detectNetwork"];
     }
+    detectNodePublicKey() {
+        if (!this._cache["swisstronikNodePublicKey"]) {
+            this._cache["swisstronikNodePublicKey"] = this._uncachedGetNodePublicKey();
+            // Clear this cache at the beginning of the next event loop
+            setTimeout(() => {
+                this._cache["swisstronikNodePublicKey"] = null;
+            }, 0);
+        }
+        return this._cache["swisstronikNodePublicKey"];
+    }
+    _uncachedGetNodePublicKey() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield timer(0);
+            let nodePublicKey = null;
+            try {
+                nodePublicKey = yield this.send("eth_getNodePublicKey", ["latest"]);
+                return nodePublicKey;
+            }
+            catch (error) {
+                logger.warn(error);
+                return logger.throwError("could not get node public key", Logger.errors.NETWORK_ERROR, {
+                    event: "noNodePublicKey",
+                    serverError: error
+                });
+            }
+        });
+    }
     _uncachedDetectNetwork() {
         return __awaiter(this, void 0, void 0, function* () {
             yield timer(0);
@@ -546,6 +574,7 @@ export class JsonRpcProvider extends BaseProvider {
         return null;
     }
     perform(method, params) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             // Legacy networks do not like the type field being passed along (which
             // is fair), so we delete type if it is 0 and a non-EIP-1559 network
@@ -561,6 +590,29 @@ export class JsonRpcProvider extends BaseProvider {
                             params.transaction = shallowCopy(tx);
                             delete params.transaction.type;
                         }
+                    }
+                }
+            }
+            if (((_a = this.network) === null || _a === void 0 ? void 0 : _a.chainId) == 1291 && (method === "estimateGas" || method === "call" || method === "getStorageAt" || method === "sendTransaction")) {
+                if (method === "getStorageAt") {
+                    logger.throwError("getStorageAt is not available in Swisstronik due to all data in the EVM being encrypted", Logger.errors.NOT_IMPLEMENTED, { operation: method });
+                }
+                const tx = params.transaction;
+                const publicKey = yield this.detectNodePublicKey();
+                if (method === "estimateGas" || (method === "sendTransaction" && !params.hasOwnProperty("signedTransaction"))) {
+                    let [encryptedData] = encryptDataFieldWithPublicKey(publicKey, tx.data);
+                    params.transaction.data = encryptedData;
+                }
+                if (method === "call") {
+                    let [encryptedData, encryptionKey] = encryptDataFieldWithPublicKey(publicKey, tx.data);
+                    params.transaction.data = encryptedData;
+                    const args = this.prepareRequest(method, params);
+                    try {
+                        let result = yield this.send(args[0], args[1]);
+                        return decryptNodeResponseWithPublicKey(publicKey, result, encryptionKey);
+                    }
+                    catch (error) {
+                        return checkError(method, error, params);
                     }
                 }
             }

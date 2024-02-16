@@ -1333,7 +1333,7 @@ export class BaseProvider extends Provider {
         }
         const result = tx;
         // Check the hash we expect is the same as the hash the server reported
-        if (hash != null && tx.hash !== hash) {
+        if (hash != null && tx.hash !== hash && tx.chainId != 1291) {
             logger.throwError("Transaction hash mismatch from Provider.sendTransaction.", Logger.errors.UNKNOWN_ERROR, { expectedHash: tx.hash, returnedHash: hash });
         }
         result.wait = (confirms, timeout) => __awaiter(this, void 0, void 0, function* () {
@@ -1355,7 +1355,7 @@ export class BaseProvider extends Provider {
                     startBlock
                 };
             }
-            const receipt = yield this._waitForTransaction(tx.hash, confirms, timeout, replacement);
+            const receipt = yield this._waitForTransaction(hash || tx.hash, confirms, timeout, replacement);
             if (receipt == null && confirms === 0) {
                 return null;
             }

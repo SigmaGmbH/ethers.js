@@ -32,6 +32,7 @@
     "@ethersproject/strings": "^5.7.0",
     "@ethersproject/transactions": "^5.7.0",
     "@ethersproject/web": "^5.7.0",
+    "@swisstronik/utils": "^1.2.1",
     "bech32": "1.1.4",
     "ws": "7.4.6"
   },
@@ -54,20 +55,19 @@
   "license": "MIT",
   "main": "./lib/index.js",
   "module": "./lib.esm/index.js",
-  "name": "@ethersproject/providers",
+  "name": "@swisstronik/ethers-providers",
   "publishConfig": {
     "access": "public"
   },
   "repository": {
     "directory": "packages/providers",
     "type": "git",
-    "url": "git://github.com/ethers-io/ethers.js.git"
+    "url": "git://github.com/SigmaGmbH/ethers.js.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "sideEffects": false,
-  "tarballHash": "0x7cd2809b100a1f50c6855245bf6ee7e848535447206f8fb83837445400204372",
   "types": "./lib/index.d.ts",
-  "version": "5.7.2"
+  "version": "1.0.1"
 }

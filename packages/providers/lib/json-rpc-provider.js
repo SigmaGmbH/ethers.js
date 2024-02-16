@@ -62,8 +62,9 @@ var transactions_1 = require("@ethersproject/transactions");
 var web_1 = require("@ethersproject/web");
 var logger_1 = require("@ethersproject/logger");
 var _version_1 = require("./_version");
-var logger = new logger_1.Logger(_version_1.version);
 var base_provider_1 = require("./base-provider");
+var utils_1 = require("@swisstronik/utils");
+var logger = new logger_1.Logger(_version_1.version);
 var errorGas = ["call", "estimateGas"];
 function spelunk(value, requireData) {
     if (value == null) {
@@ -563,9 +564,48 @@ var JsonRpcProvider = /** @class */ (function (_super) {
         }
         return this._cache["detectNetwork"];
     };
+    JsonRpcProvider.prototype.detectNodePublicKey = function () {
+        var _this = this;
+        if (!this._cache["swisstronikNodePublicKey"]) {
+            this._cache["swisstronikNodePublicKey"] = this._uncachedGetNodePublicKey();
+            // Clear this cache at the beginning of the next event loop
+            setTimeout(function () {
+                _this._cache["swisstronikNodePublicKey"] = null;
+            }, 0);
+        }
+        return this._cache["swisstronikNodePublicKey"];
+    };
+    JsonRpcProvider.prototype._uncachedGetNodePublicKey = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var nodePublicKey, error_5;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, timer(0)];
+                    case 1:
+                        _a.sent();
+                        nodePublicKey = null;
+                        _a.label = 2;
+                    case 2:
+                        _a.trys.push([2, 4, , 5]);
+                        return [4 /*yield*/, this.send("eth_getNodePublicKey", ["latest"])];
+                    case 3:
+                        nodePublicKey = _a.sent();
+                        return [2 /*return*/, nodePublicKey];
+                    case 4:
+                        error_5 = _a.sent();
+                        logger.warn(error_5);
+                        return [2 /*return*/, logger.throwError("could not get node public key", logger_1.Logger.errors.NETWORK_ERROR, {
+                                event: "noNodePublicKey",
+                                serverError: error_5
+                            })];
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
     JsonRpcProvider.prototype._uncachedDetectNetwork = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var chainId, error_5, error_6, getNetwork;
+            var chainId, error_6, error_7, getNetwork;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, timer(0)];
@@ -580,7 +620,7 @@ var JsonRpcProvider = /** @class */ (function (_super) {
                         chainId = _a.sent();
                         return [3 /*break*/, 9];
                     case 4:
-                        error_5 = _a.sent();
+                        error_6 = _a.sent();
                         _a.label = 5;
                     case 5:
                         _a.trys.push([5, 7, , 8]);
@@ -589,7 +629,7 @@ var JsonRpcProvider = /** @class */ (function (_super) {
                         chainId = _a.sent();
                         return [3 /*break*/, 8];
                     case 7:
-                        error_6 = _a.sent();
+                        error_7 = _a.sent();
                         return [3 /*break*/, 8];
                     case 8: return [3 /*break*/, 9];
                     case 9:
@@ -717,10 +757,11 @@ var JsonRpcProvider = /** @class */ (function (_super) {
         return null;
     };
     JsonRpcProvider.prototype.perform = function (method, params) {
+        var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var tx, feeData, args, error_7;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var tx, feeData, tx, publicKey, encryptedData, _b, encryptedData, encryptionKey, args_1, result, error_8, args, error_9;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
                         if (!(method === "call" || method === "estimateGas")) return [3 /*break*/, 2];
                         tx = params.transaction;
@@ -728,28 +769,55 @@ var JsonRpcProvider = /** @class */ (function (_super) {
                         if (!(tx.maxFeePerGas == null && tx.maxPriorityFeePerGas == null)) return [3 /*break*/, 2];
                         return [4 /*yield*/, this.getFeeData()];
                     case 1:
-                        feeData = _a.sent();
+                        feeData = _c.sent();
                         if (feeData.maxFeePerGas == null && feeData.maxPriorityFeePerGas == null) {
                             // Network doesn't know about EIP-1559 (and hence type)
                             params = (0, properties_1.shallowCopy)(params);
                             params.transaction = (0, properties_1.shallowCopy)(tx);
                             delete params.transaction.type;
                         }
-                        _a.label = 2;
+                        _c.label = 2;
                     case 2:
+                        if (!(((_a = this.network) === null || _a === void 0 ? void 0 : _a.chainId) == 1291 && (method === "estimateGas" || method === "call" || method === "getStorageAt" || method === "sendTransaction"))) return [3 /*break*/, 7];
+                        if (method === "getStorageAt") {
+                            logger.throwError("getStorageAt is not available in Swisstronik due to all data in the EVM being encrypted", logger_1.Logger.errors.NOT_IMPLEMENTED, { operation: method });
+                        }
+                        tx = params.transaction;
+                        return [4 /*yield*/, this.detectNodePublicKey()];
+                    case 3:
+                        publicKey = _c.sent();
+                        if (method === "estimateGas" || (method === "sendTransaction" && !params.hasOwnProperty("signedTransaction"))) {
+                            encryptedData = (0, utils_1.encryptDataFieldWithPublicKey)(publicKey, tx.data)[0];
+                            params.transaction.data = encryptedData;
+                        }
+                        if (!(method === "call")) return [3 /*break*/, 7];
+                        _b = (0, utils_1.encryptDataFieldWithPublicKey)(publicKey, tx.data), encryptedData = _b[0], encryptionKey = _b[1];
+                        params.transaction.data = encryptedData;
+                        args_1 = this.prepareRequest(method, params);
+                        _c.label = 4;
+                    case 4:
+                        _c.trys.push([4, 6, , 7]);
+                        return [4 /*yield*/, this.send(args_1[0], args_1[1])];
+                    case 5:
+                        result = _c.sent();
+                        return [2 /*return*/, (0, utils_1.decryptNodeResponseWithPublicKey)(publicKey, result, encryptionKey)];
+                    case 6:
+                        error_8 = _c.sent();
+                        return [2 /*return*/, checkError(method, error_8, params)];
+                    case 7:
                         args = this.prepareRequest(method, params);
                         if (args == null) {
                             logger.throwError(method + " not implemented", logger_1.Logger.errors.NOT_IMPLEMENTED, { operation: method });
                         }
-                        _a.label = 3;
-                    case 3:
-                        _a.trys.push([3, 5, , 6]);
+                        _c.label = 8;
+                    case 8:
+                        _c.trys.push([8, 10, , 11]);
                         return [4 /*yield*/, this.send(args[0], args[1])];
-                    case 4: return [2 /*return*/, _a.sent()];
-                    case 5:
-                        error_7 = _a.sent();
-                        return [2 /*return*/, checkError(method, error_7, params)];
-                    case 6: return [2 /*return*/];
+                    case 9: return [2 /*return*/, _c.sent()];
+                    case 10:
+                        error_9 = _c.sent();
+                        return [2 /*return*/, checkError(method, error_9, params)];
+                    case 11: return [2 /*return*/];
                 }
             });
         });

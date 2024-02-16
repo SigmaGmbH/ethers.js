@@ -34,6 +34,8 @@ export declare class JsonRpcProvider extends BaseProvider {
     constructor(url?: ConnectionInfo | string, network?: Networkish);
     static defaultUrl(): string;
     detectNetwork(): Promise<Network>;
+    detectNodePublicKey(): Promise<string>;
+    _uncachedGetNodePublicKey(): Promise<string>;
     _uncachedDetectNetwork(): Promise<Network>;
     getSigner(addressOrIndex?: string | number): JsonRpcSigner;
     getUncheckedSigner(addressOrIndex?: string | number): UncheckedJsonRpcSigner;
