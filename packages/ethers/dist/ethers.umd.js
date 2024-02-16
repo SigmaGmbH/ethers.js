@@ -52694,7 +52694,7 @@
 	 */
 	function encryptDataFieldWithPublicKey(nodePublicKey, data, userEncryptionKey) {
 	    // Generate random user encryption key if is not provided
-	    userEncryptionKey = userEncryptionKey ?? (0, naclFast.randomBytes)(32);
+	    userEncryptionKey = userEncryptionKey != null ? userEncryptionKey : (0, naclFast.randomBytes)(32);
 	    // Create encryption key using KDF
 	    const encryptionPrivateKey = (0, encryption.deriveEncryptionKey)(userEncryptionKey, (0, utils$6.stringToU8a)(encryption.USER_KEY_PREFIX));
 	    let dataEncoded = typeof data === "string" ? (0, utils$6.hexToU8a)(data) : data;
@@ -52715,7 +52715,7 @@
 	 */
 	async function encryptDataField(nodeURL, data, userEncryptionKey) {
 	    // Generate random user encryption key if is not provided
-	    userEncryptionKey = userEncryptionKey ?? (0, naclFast.randomBytes)(32);
+	    userEncryptionKey = userEncryptionKey != null ? userEncryptionKey : (0, naclFast.randomBytes)(32);
 	    // Create encryption key using KDF
 	    const encryptionPrivateKey = (0, encryption.deriveEncryptionKey)(userEncryptionKey, (0, utils$6.stringToU8a)(encryption.USER_KEY_PREFIX));
 	    // Obtain node public key
