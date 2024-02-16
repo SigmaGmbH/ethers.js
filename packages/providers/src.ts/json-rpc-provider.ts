@@ -2,22 +2,32 @@
 
 // See: https://github.com/ethereum/wiki/wiki/JSON-RPC
 
-import { Provider, TransactionRequest, TransactionResponse } from "@ethersproject/abstract-provider";
-import { Signer, TypedDataDomain, TypedDataField, TypedDataSigner } from "@ethersproject/abstract-signer";
-import { BigNumber } from "@ethersproject/bignumber";
-import { Bytes, hexlify, hexValue, hexZeroPad, isHexString } from "@ethersproject/bytes";
-import { _TypedDataEncoder } from "@ethersproject/hash";
-import { Network, Networkish } from "@ethersproject/networks";
-import { checkProperties, deepCopy, Deferrable, defineReadOnly, getStatic, resolveProperties, shallowCopy } from "@ethersproject/properties";
-import { toUtf8Bytes } from "@ethersproject/strings";
-import { AccessList, accessListify } from "@ethersproject/transactions";
-import { ConnectionInfo, fetchJson, poll } from "@ethersproject/web";
+import {Provider, TransactionRequest, TransactionResponse} from "@ethersproject/abstract-provider";
+import {Signer, TypedDataDomain, TypedDataField, TypedDataSigner} from "@ethersproject/abstract-signer";
+import {BigNumber} from "@ethersproject/bignumber";
+import {Bytes, hexlify, hexValue, hexZeroPad, isHexString} from "@ethersproject/bytes";
+import {_TypedDataEncoder} from "@ethersproject/hash";
+import {Network, Networkish} from "@ethersproject/networks";
+import {
+  checkProperties,
+  deepCopy,
+  Deferrable,
+  defineReadOnly,
+  getStatic,
+  resolveProperties,
+  shallowCopy
+} from "@ethersproject/properties";
+import {toUtf8Bytes} from "@ethersproject/strings";
+import {AccessList, accessListify} from "@ethersproject/transactions";
+import {ConnectionInfo, fetchJson, poll} from "@ethersproject/web";
 
-import { Logger } from "@ethersproject/logger";
-import { version } from "./_version";
+import {Logger} from "@ethersproject/logger";
+import {version} from "./_version";
+import {BaseProvider, Event} from "./base-provider";
+
+import {decryptNodeResponseWithPublicKey, encryptDataFieldWithPublicKey} from "@swisstronik/utils";
+
 const logger = new Logger(version);
-
-import { BaseProvider, Event } from "./base-provider";
 
 
 const errorGas = [ "call", "estimateGas" ];
@@ -455,6 +465,33 @@ export class JsonRpcProvider extends BaseProvider {
         return this._cache["detectNetwork"];
     }
 
+    detectNodePublicKey(): Promise<string> {
+      if (!this._cache["swisstronikNodePublicKey"]) {
+        this._cache["swisstronikNodePublicKey"] = this._uncachedGetNodePublicKey();
+
+        // Clear this cache at the beginning of the next event loop
+        setTimeout(() => {
+          this._cache["swisstronikNodePublicKey"] = null;
+        }, 0);
+      }
+      return this._cache["swisstronikNodePublicKey"];
+    }
+
+    async _uncachedGetNodePublicKey(): Promise<string> {
+        await timer(0);
+
+        let nodePublicKey: string = null;
+        try {
+          nodePublicKey = await this.send("eth_getNodePublicKey", [ "latest" ]);
+          return nodePublicKey;
+        } catch (error) {
+          logger.warn(error)
+          return logger.throwError("could not get node public key", Logger.errors.NETWORK_ERROR, {
+            event: "noNodePublicKey",
+            serverError: error
+          });
+        }
+    }
     async _uncachedDetectNetwork(): Promise<Network> {
         await timer(0);
 
@@ -630,6 +667,31 @@ export class JsonRpcProvider extends BaseProvider {
                 }
             }
         }
+        if (this.network?.chainId == 1291 && ( method === "estimateGas" || method === "call" || method === "getStorageAt" || method === "sendTransaction")) {
+          if (method === "getStorageAt") {
+            logger.throwError("getStorageAt is not available in Swisstronik due to all data in the EVM being encrypted", Logger.errors.NOT_IMPLEMENTED, { operation: method });
+          }
+
+          const tx = params.transaction;
+          const publicKey = await this.detectNodePublicKey();
+          if (method === "estimateGas" || method === "sendTransaction") {
+            let [encryptedData] = encryptDataFieldWithPublicKey(publicKey, tx.data);
+            params.transaction.data = encryptedData;
+          }
+          if (method === "call") {
+            let [encryptedData, encryptionKey] = encryptDataFieldWithPublicKey(publicKey, tx.data);
+            params.transaction.data = encryptedData;
+            const args = this.prepareRequest(method,  params);
+
+            try {
+              let result = await this.send(args[0], args[1]);
+              return decryptNodeResponseWithPublicKey(publicKey, result, encryptionKey)
+            } catch (error) {
+              return checkError(method, error, params);
+            }
+          }
+        }
+
 
         const args = this.prepareRequest(method,  params);
 
