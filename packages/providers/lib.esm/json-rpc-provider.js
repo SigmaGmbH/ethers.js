@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Signer } from "@ethersproject/abstract-signer";
+import { Signer } from "@swisstronik/abstract-signer";
 import { BigNumber } from "@ethersproject/bignumber";
 import { hexlify, hexValue, hexZeroPad, isHexString } from "@ethersproject/bytes";
 import { _TypedDataEncoder } from "@ethersproject/hash";
@@ -593,13 +593,13 @@ export class JsonRpcProvider extends BaseProvider {
                     }
                 }
             }
-            if (((_a = this.network) === null || _a === void 0 ? void 0 : _a.chainId) == 1291 && (method === "estimateGas" || method === "call" || method === "getStorageAt" || method === "sendTransaction")) {
+            if (((_a = this.network) === null || _a === void 0 ? void 0 : _a.chainId) == 1291 && (method === "estimateGas" || method === "call" || method === "getStorageAt")) {
                 if (method === "getStorageAt") {
                     logger.throwError("getStorageAt is not available in Swisstronik due to all data in the EVM being encrypted", Logger.errors.NOT_IMPLEMENTED, { operation: method });
                 }
                 const tx = params.transaction;
                 const publicKey = yield this.detectNodePublicKey();
-                if (method === "estimateGas" || (method === "sendTransaction" && !params.hasOwnProperty("signedTransaction"))) {
+                if (method === "estimateGas" && !params.hasOwnProperty("signedTransaction")) {
                     let [encryptedData] = encryptDataFieldWithPublicKey(publicKey, tx.data);
                     params.transaction.data = encryptedData;
                 }

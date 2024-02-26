@@ -131,9 +131,9 @@ Object.defineProperty(exports, "formatEther", { enumerable: true, get: function 
 Object.defineProperty(exports, "parseEther", { enumerable: true, get: function () { return units_1.parseEther; } });
 Object.defineProperty(exports, "formatUnits", { enumerable: true, get: function () { return units_1.formatUnits; } });
 Object.defineProperty(exports, "parseUnits", { enumerable: true, get: function () { return units_1.parseUnits; } });
-var wallet_1 = require("@ethersproject/wallet");
-Object.defineProperty(exports, "verifyMessage", { enumerable: true, get: function () { return wallet_1.verifyMessage; } });
-Object.defineProperty(exports, "verifyTypedData", { enumerable: true, get: function () { return wallet_1.verifyTypedData; } });
+var ethers_wallet_1 = require("@swisstronik/ethers-wallet");
+Object.defineProperty(exports, "verifyMessage", { enumerable: true, get: function () { return ethers_wallet_1.verifyMessage; } });
+Object.defineProperty(exports, "verifyTypedData", { enumerable: true, get: function () { return ethers_wallet_1.verifyTypedData; } });
 var web_1 = require("@ethersproject/web");
 Object.defineProperty(exports, "_fetchData", { enumerable: true, get: function () { return web_1._fetchData; } });
 Object.defineProperty(exports, "fetchJson", { enumerable: true, get: function () { return web_1.fetchJson; } });

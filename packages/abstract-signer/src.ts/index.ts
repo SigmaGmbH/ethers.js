@@ -7,6 +7,8 @@ import { Deferrable, defineReadOnly, resolveProperties, shallowCopy } from "@eth
 
 import { Logger } from "@ethersproject/logger";
 import { version } from "./_version";
+import { encryptDataFieldWithPublicKey } from "@swisstronik/utils";
+
 const logger = new Logger(version);
 
 const allowedTransactionKeys: Array<string> = [
@@ -122,6 +124,12 @@ export abstract class Signer {
     async sendTransaction(transaction: Deferrable<TransactionRequest>): Promise<TransactionResponse> {
         this._checkProvider("sendTransaction");
         const tx = await this.populateTransaction(transaction);
+
+        if (tx.chainId === 1291 && tx.data && (this.provider as any)['detectNodePublicKey'] !== undefined) {
+          const publicKey = await (this.provider as any).detectNodePublicKey()
+          let [encryptedData] = encryptDataFieldWithPublicKey(publicKey, tx.data as any);
+          tx.data = encryptedData;
+        }
         const signedTx = await this.signTransaction(tx);
         return await this.provider.sendTransaction(signedTx);
     }
@@ -197,6 +205,7 @@ export abstract class Signer {
     async populateTransaction(transaction: Deferrable<TransactionRequest>): Promise<TransactionRequest> {
 
         const tx: Deferrable<TransactionRequest> = await resolveProperties(this.checkTransaction(transaction))
+
 
         if (tx.to != null) {
             tx.to = Promise.resolve(tx.to).then(async (to) => {

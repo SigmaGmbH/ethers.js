@@ -52,7 +52,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.JsonRpcProvider = exports.JsonRpcSigner = void 0;
-var abstract_signer_1 = require("@ethersproject/abstract-signer");
+var abstract_signer_1 = require("@swisstronik/abstract-signer");
 var bignumber_1 = require("@ethersproject/bignumber");
 var bytes_1 = require("@ethersproject/bytes");
 var hash_1 = require("@ethersproject/hash");
@@ -778,7 +778,7 @@ var JsonRpcProvider = /** @class */ (function (_super) {
                         }
                         _c.label = 2;
                     case 2:
-                        if (!(((_a = this.network) === null || _a === void 0 ? void 0 : _a.chainId) == 1291 && (method === "estimateGas" || method === "call" || method === "getStorageAt" || method === "sendTransaction"))) return [3 /*break*/, 7];
+                        if (!(((_a = this.network) === null || _a === void 0 ? void 0 : _a.chainId) == 1291 && (method === "estimateGas" || method === "call" || method === "getStorageAt"))) return [3 /*break*/, 7];
                         if (method === "getStorageAt") {
                             logger.throwError("getStorageAt is not available in Swisstronik due to all data in the EVM being encrypted", logger_1.Logger.errors.NOT_IMPLEMENTED, { operation: method });
                         }
@@ -786,7 +786,7 @@ var JsonRpcProvider = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.detectNodePublicKey()];
                     case 3:
                         publicKey = _c.sent();
-                        if (method === "estimateGas" || (method === "sendTransaction" && !params.hasOwnProperty("signedTransaction"))) {
+                        if (method === "estimateGas" && !params.hasOwnProperty("signedTransaction")) {
                             encryptedData = (0, utils_1.encryptDataFieldWithPublicKey)(publicKey, tx.data)[0];
                             params.transaction.data = encryptedData;
                         }

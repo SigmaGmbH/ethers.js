@@ -1,5 +1,5 @@
 import { Provider, TransactionRequest, TransactionResponse } from "@ethersproject/abstract-provider";
-import { Signer, TypedDataDomain, TypedDataField, TypedDataSigner } from "@ethersproject/abstract-signer";
+import { Signer, TypedDataDomain, TypedDataField, TypedDataSigner } from "@swisstronik/abstract-signer";
 import { Bytes } from "@ethersproject/bytes";
 import { Network, Networkish } from "@ethersproject/networks";
 import { Deferrable } from "@ethersproject/properties";

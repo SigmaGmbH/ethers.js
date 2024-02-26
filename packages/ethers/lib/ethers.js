@@ -27,11 +27,11 @@ Object.defineProperty(exports, "ContractFactory", { enumerable: true, get: funct
 var bignumber_1 = require("@ethersproject/bignumber");
 Object.defineProperty(exports, "BigNumber", { enumerable: true, get: function () { return bignumber_1.BigNumber; } });
 Object.defineProperty(exports, "FixedNumber", { enumerable: true, get: function () { return bignumber_1.FixedNumber; } });
-var abstract_signer_1 = require("@ethersproject/abstract-signer");
+var abstract_signer_1 = require("@swisstronik/abstract-signer");
 Object.defineProperty(exports, "Signer", { enumerable: true, get: function () { return abstract_signer_1.Signer; } });
 Object.defineProperty(exports, "VoidSigner", { enumerable: true, get: function () { return abstract_signer_1.VoidSigner; } });
-var wallet_1 = require("@ethersproject/wallet");
-Object.defineProperty(exports, "Wallet", { enumerable: true, get: function () { return wallet_1.Wallet; } });
+var ethers_wallet_1 = require("@swisstronik/ethers-wallet");
+Object.defineProperty(exports, "Wallet", { enumerable: true, get: function () { return ethers_wallet_1.Wallet; } });
 var constants = __importStar(require("@ethersproject/constants"));
 exports.constants = constants;
 var providers = __importStar(require("@swisstronik/ethers-providers"));

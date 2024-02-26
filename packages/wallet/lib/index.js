@@ -54,7 +54,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyTypedData = exports.verifyMessage = exports.Wallet = void 0;
 var address_1 = require("@ethersproject/address");
 var abstract_provider_1 = require("@ethersproject/abstract-provider");
-var abstract_signer_1 = require("@ethersproject/abstract-signer");
+var abstract_signer_1 = require("@swisstronik/abstract-signer");
 var bytes_1 = require("@ethersproject/bytes");
 var hash_1 = require("@ethersproject/hash");
 var hdnode_1 = require("@ethersproject/hdnode");

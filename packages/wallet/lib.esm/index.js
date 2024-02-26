@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { getAddress } from "@ethersproject/address";
 import { Provider } from "@ethersproject/abstract-provider";
-import { Signer } from "@ethersproject/abstract-signer";
+import { Signer } from "@swisstronik/abstract-signer";
 import { arrayify, concat, hexDataSlice, isHexString, joinSignature } from "@ethersproject/bytes";
 import { hashMessage, _TypedDataEncoder } from "@ethersproject/hash";
 import { defaultPath, HDNode, entropyToMnemonic } from "@ethersproject/hdnode";

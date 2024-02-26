@@ -3,7 +3,7 @@
 // See: https://github.com/ethereum/wiki/wiki/JSON-RPC
 
 import { Provider, TransactionRequest, TransactionResponse } from "@ethersproject/abstract-provider";
-import { Signer, TypedDataDomain, TypedDataField, TypedDataSigner } from "@ethersproject/abstract-signer";
+import { Signer, TypedDataDomain, TypedDataField, TypedDataSigner } from "@swisstronik/abstract-signer";
 import { BigNumber } from "@ethersproject/bignumber";
 import { Bytes, hexlify, hexValue, hexZeroPad, isHexString } from "@ethersproject/bytes";
 import { _TypedDataEncoder } from "@ethersproject/hash";
@@ -659,14 +659,14 @@ export class JsonRpcProvider extends BaseProvider {
                 }
             }
         }
-        if (this.network?.chainId == 1291 && ( method === "estimateGas" || method === "call" || method === "getStorageAt" || method === "sendTransaction")) {
+        if (this.network?.chainId == 1291 && ( method === "estimateGas" || method === "call" || method === "getStorageAt")) {
           if (method === "getStorageAt") {
             logger.throwError("getStorageAt is not available in Swisstronik due to all data in the EVM being encrypted", Logger.errors.NOT_IMPLEMENTED, { operation: method });
           }
 
           const tx = params.transaction;
           const publicKey = await this.detectNodePublicKey();
-          if (method === "estimateGas" || (method === "sendTransaction" && !params.hasOwnProperty("signedTransaction"))) {
+          if (method === "estimateGas" && !params.hasOwnProperty("signedTransaction")) {
             let [encryptedData] = encryptDataFieldWithPublicKey(publicKey, tx.data);
             params.transaction.data = encryptedData;
           }

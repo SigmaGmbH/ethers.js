@@ -55,6 +55,7 @@ exports.VoidSigner = exports.Signer = void 0;
 var properties_1 = require("@ethersproject/properties");
 var logger_1 = require("@ethersproject/logger");
 var _version_1 = require("./_version");
+var utils_1 = require("@swisstronik/utils");
 var logger = new logger_1.Logger(_version_1.version);
 var allowedTransactionKeys = [
     "accessList", "ccipReadEnabled", "chainId", "customData", "data", "from", "gasLimit", "gasPrice", "maxFeePerGas", "maxPriorityFeePerGas", "nonce", "to", "type", "value"
@@ -137,7 +138,7 @@ var Signer = /** @class */ (function () {
     // Populates all fields in a transaction, signs it and sends it to the network
     Signer.prototype.sendTransaction = function (transaction) {
         return __awaiter(this, void 0, void 0, function () {
-            var tx, signedTx;
+            var tx, publicKey, encryptedData, signedTx;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -145,11 +146,18 @@ var Signer = /** @class */ (function () {
                         return [4 /*yield*/, this.populateTransaction(transaction)];
                     case 1:
                         tx = _a.sent();
-                        return [4 /*yield*/, this.signTransaction(tx)];
+                        if (!(tx.chainId === 1291 && tx.data && this.provider['detectNodePublicKey'] !== undefined)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.provider.detectNodePublicKey()];
                     case 2:
+                        publicKey = _a.sent();
+                        encryptedData = (0, utils_1.encryptDataFieldWithPublicKey)(publicKey, tx.data)[0];
+                        tx.data = encryptedData;
+                        _a.label = 3;
+                    case 3: return [4 /*yield*/, this.signTransaction(tx)];
+                    case 4:
                         signedTx = _a.sent();
                         return [4 /*yield*/, this.provider.sendTransaction(signedTx)];
-                    case 3: return [2 /*return*/, _a.sent()];
+                    case 5: return [2 /*return*/, _a.sent()];
                 }
             });
         });

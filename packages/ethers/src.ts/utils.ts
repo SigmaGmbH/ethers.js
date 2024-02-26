@@ -19,7 +19,7 @@ import { computePublicKey, recoverPublicKey, SigningKey } from "@ethersproject/s
 import { formatBytes32String, nameprep, parseBytes32String, _toEscapedUtf8String, toUtf8Bytes, toUtf8CodePoints, toUtf8String, Utf8ErrorFuncs } from "@ethersproject/strings";
 import { accessListify, computeAddress, parse as parseTransaction, recoverAddress, serialize as serializeTransaction, TransactionTypes } from "@ethersproject/transactions";
 import { commify, formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
-import { verifyMessage, verifyTypedData } from "@ethersproject/wallet";
+import { verifyMessage, verifyTypedData } from "@swisstronik/ethers-wallet";
 import { _fetchData, fetchJson, poll } from "@ethersproject/web";
 
 ////////////////////////

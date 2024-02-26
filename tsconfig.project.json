@@ -21,6 +21,12 @@
     {
       "path": "./packages/ethers"
     },
+    {
+      "path": "./packages/abstract-signer"
+    },
+    {
+      "path": "./packages/wallet"
+    }
   ],
   "files": []
 }

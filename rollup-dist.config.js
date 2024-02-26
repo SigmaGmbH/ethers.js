@@ -8,6 +8,7 @@ import resolveNode from "@rollup/plugin-node-resolve";
 import replace from "@rollup/plugin-replace";
 
 import sourcemaps from 'rollup-plugin-sourcemaps';
+import json from "@rollup/plugin-json";
 
 // We only need this for its version (we inject it into a require)
 import elliptic from "elliptic";
@@ -87,6 +88,8 @@ function getUmdConfig() {
         mainFields: [ "browser", "main" ]
     }));
     plugins.push(commonjs({ }));
+    plugins.push(json());
+
 
     return {
         input: `packages/ethers/lib/index.js`,
@@ -114,8 +117,9 @@ function getEsmConfig() {
 
     plugins.push(resolveNode({ }));
     plugins.push(commonjs({ }));
+    plugins.push(json());
 
-    return {
+  return {
         input: `packages/ethers/lib.esm/index.js`,
         output: {
             file: `packages/ethers/dist/ethers.esm.js`,

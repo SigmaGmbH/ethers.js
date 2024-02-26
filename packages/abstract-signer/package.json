@@ -5,7 +5,8 @@
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/bytes": "^5.7.0",
     "@ethersproject/logger": "^5.7.0",
-    "@ethersproject/properties": "^5.7.0"
+    "@ethersproject/properties": "^5.7.0",
+    "@swisstronik/utils": "^1.2.1"
   },
   "description": "An Abstract Class for desribing an Ethereum Signer for ethers.",
   "ethereum": "donations.ethers.eth",
@@ -26,20 +27,19 @@
   "license": "MIT",
   "main": "./lib/index.js",
   "module": "./lib.esm/index.js",
-  "name": "@ethersproject/abstract-signer",
+  "name": "@swisstronik/abstract-signer",
   "publishConfig": {
     "access": "public"
   },
   "repository": {
     "directory": "packages/abstract-signer",
     "type": "git",
-    "url": "git://github.com/ethers-io/ethers.js.git"
+    "url": "git://github.com/SigmaGmbH/ethers.js.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "sideEffects": false,
-  "tarballHash": "0x10e5007f2b6467e86fa36292984b8e74bfcd18e6dc1748cf0f62b36c4e4e228a",
   "types": "./lib/index.d.ts",
-  "version": "5.7.0"
+  "version": "0.0.1"
 }

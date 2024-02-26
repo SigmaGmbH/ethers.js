@@ -138,7 +138,7 @@ function alias(name) {
 (function () {
     return __awaiter(this, void 0, void 0, function* () {
         console.log(log_1.colorify.bold(`Aliasing Node ESM to Browser ESM...`));
-        const dirnames = ['providers', 'ethers']
+        const dirnames = ['providers', 'ethers', 'abstract-signer', 'wallet']
       for (let i = 0; i < dirnames.length; i++) {
             //if (dirnames[i] !== "signing-key") { continue; }
             yield alias(dirnames[i]);

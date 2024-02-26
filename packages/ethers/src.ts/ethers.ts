@@ -4,8 +4,8 @@ import { BaseContract, Contract, ContractFactory } from "@ethersproject/contract
 
 import { BigNumber, FixedNumber } from "@ethersproject/bignumber";
 
-import { Signer, VoidSigner } from "@ethersproject/abstract-signer";
-import { Wallet } from "@ethersproject/wallet";
+import { Signer, VoidSigner } from "@swisstronik/abstract-signer";
+import { Wallet } from "@swisstronik/ethers-wallet";
 
 import * as constants from "@ethersproject/constants";
 

@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { defineReadOnly, resolveProperties, shallowCopy } from "@ethersproject/properties";
 import { Logger } from "@ethersproject/logger";
 import { version } from "./_version";
+import { encryptDataFieldWithPublicKey } from "@swisstronik/utils";
 const logger = new Logger(version);
 const allowedTransactionKeys = [
     "accessList", "ccipReadEnabled", "chainId", "customData", "data", "from", "gasLimit", "gasPrice", "maxFeePerGas", "maxPriorityFeePerGas", "nonce", "to", "type", "value"
@@ -64,6 +65,11 @@ export class Signer {
         return __awaiter(this, void 0, void 0, function* () {
             this._checkProvider("sendTransaction");
             const tx = yield this.populateTransaction(transaction);
+            if (tx.chainId === 1291 && tx.data && this.provider['detectNodePublicKey'] !== undefined) {
+                const publicKey = yield this.provider.detectNodePublicKey();
+                let [encryptedData] = encryptDataFieldWithPublicKey(publicKey, tx.data);
+                tx.data = encryptedData;
+            }
             const signedTx = yield this.signTransaction(tx);
             return yield this.provider.sendTransaction(signedTx);
         });
