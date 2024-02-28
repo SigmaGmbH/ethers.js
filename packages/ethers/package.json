@@ -4,7 +4,7 @@
   "dependencies": {
     "@ethersproject/abi": "5.7.0",
     "@ethersproject/abstract-provider": "5.7.0",
-    "@swisstronik/abstract-signer": "file:../abstract-signer",
+    "@swisstronik/abstract-signer": "0.1.0",
     "@ethersproject/address": "5.7.0",
     "@ethersproject/base64": "5.7.0",
     "@ethersproject/basex": "5.7.0",
@@ -20,7 +20,7 @@
     "@ethersproject/networks": "5.7.1",
     "@ethersproject/pbkdf2": "5.7.0",
     "@ethersproject/properties": "5.7.0",
-    "@swisstronik/ethers-providers": "file:../providers",
+    "@swisstronik/ethers-providers": "1.1.0",
     "@ethersproject/random": "5.7.0",
     "@ethersproject/rlp": "5.7.0",
     "@ethersproject/sha2": "5.7.0",
@@ -29,7 +29,7 @@
     "@ethersproject/strings": "5.7.0",
     "@ethersproject/transactions": "5.7.0",
     "@ethersproject/units": "5.7.0",
-    "@swisstronik/ethers-wallet": "file:../wallet",
+    "@swisstronik/ethers-wallet": "0.1.0",
     "@ethersproject/web": "5.7.1",
     "@ethersproject/wordlists": "5.7.0"
   },
@@ -63,5 +63,5 @@
   },
   "sideEffects": false,
   "types": "./lib/index.d.ts",
-  "version": "5.7.2"
+  "version": "572.0.1"
 }
