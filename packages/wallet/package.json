@@ -2,7 +2,7 @@
   "author": "Richard Moore <me@ricmoo.com>",
   "dependencies": {
     "@ethersproject/abstract-provider": "^5.7.0",
-    "@swisstronik/abstract-signer": "0.1.0",
+    "@swisstronik/abstract-signer": "^0.1.1",
     "@ethersproject/address": "^5.7.0",
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/bytes": "^5.7.0",
@@ -50,5 +50,5 @@
   },
   "sideEffects": false,
   "types": "./lib/index.d.ts",
-  "version": "0.1.0"
+  "version": "0.1.1"
 }

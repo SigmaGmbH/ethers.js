@@ -786,7 +786,7 @@ var JsonRpcProvider = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.detectNodePublicKey()];
                     case 3:
                         publicKey = _c.sent();
-                        if (method === "estimateGas" && !params.hasOwnProperty("signedTransaction")) {
+                        if (method === "estimateGas" && !params.hasOwnProperty("signedTransaction") && tx.to) {
                             encryptedData = (0, utils_1.encryptDataFieldWithPublicKey)(publicKey, tx.data)[0];
                             params.transaction.data = encryptedData;
                         }

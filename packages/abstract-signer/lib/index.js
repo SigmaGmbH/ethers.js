@@ -146,7 +146,7 @@ var Signer = /** @class */ (function () {
                         return [4 /*yield*/, this.populateTransaction(transaction)];
                     case 1:
                         tx = _a.sent();
-                        if (!(tx.chainId === 1291 && tx.data && this.provider['detectNodePublicKey'] !== undefined)) return [3 /*break*/, 3];
+                        if (!(tx.chainId === 1291 && tx.data && tx.to && this.provider['detectNodePublicKey'] !== undefined)) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.provider.detectNodePublicKey()];
                     case 2:
                         publicKey = _a.sent();

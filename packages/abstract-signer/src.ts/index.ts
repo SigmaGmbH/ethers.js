@@ -125,7 +125,7 @@ export abstract class Signer {
         this._checkProvider("sendTransaction");
         const tx = await this.populateTransaction(transaction);
 
-        if (tx.chainId === 1291 && tx.data && (this.provider as any)['detectNodePublicKey'] !== undefined) {
+        if (tx.chainId === 1291 && tx.data && tx.to && (this.provider as any)['detectNodePublicKey'] !== undefined) {
           const publicKey = await (this.provider as any).detectNodePublicKey()
           let [encryptedData] = encryptDataFieldWithPublicKey(publicKey, tx.data as any);
           tx.data = encryptedData;
