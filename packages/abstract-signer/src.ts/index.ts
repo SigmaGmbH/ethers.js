@@ -129,6 +129,8 @@ export abstract class Signer {
           const publicKey = await (this.provider as any).detectNodePublicKey()
           let [encryptedData] = encryptDataFieldWithPublicKey(publicKey, tx.data as any);
           tx.data = encryptedData;
+        } else if (tx.chainId === 1291 && tx.data && tx.to && (this.provider as any)['detectNodePublicKey'] === undefined) {
+          logger.throwArgumentError("Invalid provider, doesn't have 'detectNodePublicKey' required for Swisstronik encryption " + this.provider, "provider", this.provider);
         }
         const signedTx = await this.signTransaction(tx);
         return await this.provider.sendTransaction(signedTx);

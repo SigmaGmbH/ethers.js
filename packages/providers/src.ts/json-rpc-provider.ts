@@ -19,6 +19,12 @@ import {BaseProvider, Event} from "./base-provider";
 
 import {decryptNodeResponseWithPublicKey, encryptDataFieldWithPublicKey} from "@swisstronik/utils";
 
+const BuiltinErrors: Record<string, { signature: string, inputs: Array<string>, name: string, reason?: boolean }> = {
+  "0x08c379a0": { signature: "Error(string)", name: "Error", inputs: [ "string" ], reason: true },
+  "0x4e487b71": { signature: "Panic(uint256)", name: "Panic", inputs: [ "uint256" ] }
+}
+
+
 const logger = new Logger(version);
 
 
@@ -677,6 +683,11 @@ export class JsonRpcProvider extends BaseProvider {
 
             try {
               let result = await this.send(args[0], args[1]);
+              const selector = hexlify(result.slice(0, 4));
+              const builtin = BuiltinErrors[selector];
+              if (builtin) {
+                return result;
+              }
               return decryptNodeResponseWithPublicKey(publicKey, result, encryptionKey)
             } catch (error) {
               return checkError(method, error, params);
