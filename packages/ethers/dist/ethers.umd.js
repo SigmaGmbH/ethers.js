@@ -28848,20 +28848,17 @@
 	exports.getNodePublicKey = void 0;
 	const axios_1 = __importDefault(require$$0$1);
 	async function getNodePublicKey(rpcEndpoint, options) {
-	    let blockNumOrHash = 'latest';
+	    let blockNumber = 'latest';
 	    if (options) {
-	        if (options.blockHash) {
-	            blockNumOrHash = options.blockHash;
-	        }
 	        if (options.blockNumber) {
-	            blockNumOrHash = options.blockNumber;
+						blockNumber = options.blockNumber;
 	        }
 	    }
 	    const requestData = {
 	        id: 1,
 	        jsonrpc: '2.0',
 	        method: 'eth_getNodePublicKey',
-	        params: [blockNumOrHash],
+	        params: [blockNumber],
 	    };
 	    try {
 	        const { data } = await axios_1.default.post(rpcEndpoint, requestData);
